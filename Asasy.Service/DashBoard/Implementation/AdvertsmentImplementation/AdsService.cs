@@ -3,22 +3,90 @@ using AAITHelper.ModelHelper;
 using Asasy.Domain.Common.Helpers;
 using Asasy.Domain.Common.PathUrl;
 using Asasy.Domain.Entities.Advertsments;
-using Asasy.Domain.Entities.Cities_Tables;
 using Asasy.Domain.Entities.UserTables;
 using Asasy.Domain.Enums;
 using Asasy.Domain.ViewModel.Ads;
-using Asasy.Domain.ViewModel.Regions;
 using Asasy.Persistence;
 using Asasy.Service.DashBoard.Contract.AdvertsmentInterface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
 {
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
+    //ssssssssssss
     public class AdsService : IAdsService
     {
         private readonly ApplicationDbContext _context;
@@ -32,8 +100,8 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
 
         public async Task<bool> AcceptAdsToSpecial(int id)
         {
-            var userPackage = _context.UserPackages.Include(a=>a.Ads).Where(d => d.Id == id).FirstOrDefault();
-            if(userPackage != null)
+            var userPackage = _context.UserPackages.Include(a => a.Ads).Where(d => d.Id == id).FirstOrDefault();
+            if (userPackage != null)
             {
                 userPackage.StatusReview = (int)StatusReviewForSpecialProduct.Accept;
                 userPackage.Ads.IsSpecial = true;
@@ -90,7 +158,7 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
                 Lng = c.Lng,
                 Location = c.Location,
                 Phone = c.Phone,
-                PhoneCode ="+966",
+                PhoneCode = "+966",
                 Price = c.Price,
                 RegionId = c.RegionId,
                 ShowPhone = c.ShowPhone,
@@ -114,7 +182,7 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
 
         public async Task<List<AdsListViewModel>> AllAds()
         {
-            var ads = _context.AdvertsmentDetails.Where(d=> !d.User.IsDeleted).Select(c => new AdsListViewModel
+            var ads = _context.AdvertsmentDetails.Where(d => !d.User.IsDeleted).Select(c => new AdsListViewModel
             {
                 AdsId = c.Id,
                 Category = c.Category.NameAr,
@@ -170,7 +238,7 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
         {
             var ad = _context.AdvertsmentDetails.Where(d => d.Id == AdsId).FirstOrDefault();
 
-            if(ad != null)
+            if (ad != null)
             {
                 ad.IsDelete = true;
                 _context.SaveChanges();
@@ -261,7 +329,7 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
                     Type = (int)NotifyTypes.EdiAdsByAdmin,
                     UserId = ad.UserId,
                     AdsId = ad.Id,
-                    Show=false
+                    Show = false
                 };
 
                 _context.NotifyUsers.Add(notify);
@@ -356,21 +424,21 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
 
         public async Task<List<AdsSpecialListViewModel>> RequestSpecilaAds()
         {
-            var ads = _context.UserPackages.Where(d=>d.StatusReview == (int)StatusReviewForSpecialProduct.Waiting).Select(c=> new AdsSpecialListViewModel
+            var ads = _context.UserPackages.Where(d => d.StatusReview == (int)StatusReviewForSpecialProduct.Waiting).Select(c => new AdsSpecialListViewModel
             {
-                Id=c.Id,
-                AdsId=c.AdsId,
-                AdsTitle=c.Ads.Title,
-                EndDate= c.EndDate.ToString("dd/MM/yyyy"),
-                IsPayed=c.IsPayed,
-                PackageDescriptionAr=c.PackageDescriptionAr,
-                PackageDescriptionEn=c.PackageDescriptionEn,
-                PackageNameAr=c.PackageNameAr,
-                PackageNameEn=c.PackageNameEn,
+                Id = c.Id,
+                AdsId = c.AdsId,
+                AdsTitle = c.Ads.Title,
+                EndDate = c.EndDate.ToString("dd/MM/yyyy"),
+                IsPayed = c.IsPayed,
+                PackageDescriptionAr = c.PackageDescriptionAr,
+                PackageDescriptionEn = c.PackageDescriptionEn,
+                PackageNameAr = c.PackageNameAr,
+                PackageNameEn = c.PackageNameEn,
                 Price = c.Price,
                 SubscriptionDate = c.SubscriptionDate.ToString("dd/MM/yyyy"),
                 User = c.User.user_Name
-            }).OrderByDescending(o=>o.Id).ToList();
+            }).OrderByDescending(o => o.Id).ToList();
 
             return ads;
         }
