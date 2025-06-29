@@ -1,17 +1,106 @@
-﻿using AAITHelper.Enums;
-using Asasy.Domain.Enums;
-using Asasy.Domain.Model;
-using Asasy.Persistence;
-using Asasy.Service.DashBoard.Contract.HomeInterfaces;
+﻿using Asasy.Service.DashBoard.Contract.HomeInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace Asasy.Controllers.DashBoard
 {
     [Authorize]
-
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly IHomeServices _homeServices;
@@ -23,7 +112,7 @@ namespace Asasy.Controllers.DashBoard
 
         public IActionResult Index()
         {
-            var data =_homeServices.HomeIndex();
+            var data = _homeServices.HomeIndex();
 
             return View(data);
         }
