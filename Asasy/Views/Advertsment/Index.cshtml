@@ -1,0 +1,322 @@
+﻿@using Asasy.Domain.ViewModel.Ads;
+@model IEnumerable<AdsListViewModel>
+@{
+    ViewData["Title"] = "AdvertisementDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="card-box">
+
+    <h2 class="header-title m-t-0 m-b-30">الاعلانات</h2>
+
+    <div>
+     
+
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center">
+                        الرقم
+                    </th>
+                    <th style="text-align:center">
+                        الحاله
+                    </th>
+                    <th style="text-align:center">
+                        تغيير الحاله
+                    </th>
+                    <th style="text-align:center">
+                        العنوان
+                    </th>
+                    <th style="text-align:center">
+                        القسم الرئيسي
+                    </th>
+
+                    <th style="text-align:center">
+                        القسم الفرعي
+                    </th>
+                    <th style="text-align:center">
+                       المنطقه
+                    </th>
+                    <th style="text-align:center">
+                        المدينه
+                    </th>
+                    <th style="text-align:center">
+                        الحي
+                    </th>
+                    <th style="text-align:center">
+                        السعر
+                    </th>
+                    <th style="text-align:center">
+                        حاله المنتج
+                    </th>
+                    <th style="text-align:center">
+                        الوصف
+                    </th>
+                    <th style="text-align:center">
+                        تاريخ الانشاء
+                    </th>
+                    <th style="text-align:center">
+                        رقم الجوال
+                    </th>
+                    <th style="text-align:center">
+                        حاله تمييز الاعلان
+                    </th>
+                   
+                    <th style="text-align:center">
+                        الصور
+                    </th>
+                    <th style="text-align:center">
+                        تعديل
+                    </th> 
+                    <th style="text-align:center">
+                        حذف
+                    </th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AdsId)
+                        </td>
+                        <td>
+                            @{
+                                if (item.IsActive == true)
+                                {
+                                    <label id="a+@item.AdsId" style="color:green;font-size: 17px;">مفعل</label>
+                                }
+                                else
+                                {
+                                    <label id="a+@item.AdsId" style="color:red;font-size: 17px;">غير مفعل</label>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <input type="button" value="تغير الحالة" onclick="ChangeStatus(@item.AdsId)" class="btn btn-purple btn-rounded" />
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubCategory)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Region)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.District)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusProduct)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phone)
+                        </td>
+
+                        <td>
+                            @if(item.IsSpecial)
+                            {
+                                <label style="color:green;font-weight:bold">مميز</label>
+                            }
+                            else
+                            {
+                                <label style="color:red;font-weight:bold">غير مميز</label>
+                            }
+                        </td>
+
+                        <td>
+                            <button onclick="GetImges(@item.AdsId)" type="button" class="btn btn-primary">
+                                الصور
+                            </button>
+                        </td>
+
+                        <td>
+                            <a asp-action="EditAd" asp-controller="Advertsment" asp-route-adId="@item.AdsId" class="icon-font btn">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                        </td>
+
+                        <td>
+                            <button onclick="DeleteAds(@item.AdsId)" type="button" class="btn btn-danger">
+                                حذف
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+    </div><!-- end row -->
+</div>
+
+
+<button hidden type="button" class="btn btn-primary" data-toggle="modal" id="fireModal" data-target="#exampleModal">
+</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">
+                <p> </p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<input type="hidden" id="msg" value="@ViewBag.Msg" />
+
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        window.addEventListener("load", function () {
+            debugger
+            var mm = $("#msg").val();
+            if ($("#msg").val() != "") {
+                toastr.success($("#msg").val())
+                setTimeout(function () {
+                    window.location.href = "/Advertsment/Index"
+
+                }, 2000);
+
+
+            }
+        });
+
+        $(document).ready(function () {
+            datatableFun("#datatable-responsive", [0, 1, 4]);
+        });
+
+
+        function ChangeStatus(id) {
+            $.post('/Advertsment/ChangeState', { id: id }, function (response) {
+                debugger;
+                var adId = "a+" + id
+                var ele = document.getElementById(adId);
+              
+                if (response.data == true) {
+                    ele.style.color = "green";
+                    ele.innerHTML = "مفعل"
+                } else if (response.data == false) {
+                    ele.style.color = "red";
+                    ele.innerHTML = "غير مفعل"
+                }
+            });
+        }
+
+
+
+        function GetImges(id) {
+            $.ajax({
+                url: "/Advertsment/AdImages",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    adsId: id
+                },
+                success: function (result) {
+                    console.log('hello')
+
+                    var ele = ``;
+                    ele += `<div style=" display: flex;justify-content: center;align-items: center;overflow: scroll;">`;
+
+                    for (let i = 0; i < result.data.length; i++) {
+                        ele += ` <img src="${result.data[i]}" style="margin:20px;" width="75" height="100">`;
+                    }
+                    ele += `</div>`;
+
+
+                    document.getElementById("modalBody").innerHTML = ele;
+                    $("#fireModal").click();
+                },
+
+                failure: function (info) {
+
+                }
+            });
+        }
+
+
+        function DeleteAds(id) {
+
+
+            Swal.fire({
+                title: 'هل انت متاكد من حذف هذا الاعلان ؟',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: 'اغلاق',
+                confirmButtonText: 'حذف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/Advertsment/DeleteAds",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            adsId: id
+                        },
+                        success: function (result) {
+
+                            if (result.data == true) {
+                                toastr.success("تم حذف الاعلان بنجاح");
+                                window.location.reload();
+                            } else {
+                                toastr.error("عفوا حدث خطأ ما");
+
+                            }
+                        },
+
+                        failure: function (info) {
+
+                        }
+                    });
+                }
+            })
+
+
+
+        }
+    </script>
+
+}
+

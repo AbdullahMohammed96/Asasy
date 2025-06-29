@@ -1,0 +1,55 @@
+﻿@model dynamic
+
+
+@{
+    ViewBag.Title = "Complete";
+    Layout = null;
+}
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+<meta name="author" content="Coderthemes">
+
+<link href="~/css/style.css" rel="stylesheet" />
+<link rel="shortcut icon" href="~/images/LogoAthathy.png">
+<title>أثاثي</title>
+
+
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px
+    }
+
+    .new-alert {
+        border: 1px solid #dbd3d3;
+        background: #EEE;
+        text-align: center;
+        width: 500px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 20px;
+    }
+</style>
+
+
+
+<div class="new-alert">
+    <aside>
+        <img src="~/images/Succes-GIF.gif" />
+    </aside>
+    <h1>
+        @*we used ViewDate => if data null not throw exception*@
+        @ViewData["Message"]
+    </h1>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+

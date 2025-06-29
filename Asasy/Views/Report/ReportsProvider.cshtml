@@ -1,0 +1,182 @@
+﻿@using Asasy.Domain.ViewModel.Reports;
+@model IEnumerable<ReportsProviderViewModel>
+
+@{
+    ViewData["Title"] = "ابلاغات المعلنين";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+    .more {
+        border: none;
+        background: #fff;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+        color: #e10e0e;
+    }
+
+    .textBody {
+        font-size: 15px;
+        color: black
+    }
+
+    .textHeader {
+        font-size: 20px;
+        font-weight: bold;
+        color: black
+    }
+</style>
+
+
+<div class="card-box">
+    <h2 class="header-title m-t-0 m-b-30">ابلاغات المعلنين</h2>
+    <div>
+
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>رقم الابلاغ</th>
+                    <th>الابلاغ</th>
+                    <th>اسم العميل</th>
+                    <th> اسم المعلن </th>
+                    <th>حذف</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @if (item.Comment != null)
+                            {
+                                @if (item.Comment.Length < 18)
+                                {
+                                    @item.Comment
+                                }
+                                else
+                                {
+                                    string txt = item.Comment.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.Comment' , 'الابلاغ')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProviderName)
+                        </td>
+                        <td>
+                            <input type="button" value="حذف" onclick="Delete('@item.Id')" class="btn btn-danger btn-rounded" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!-- -------------------------------------------------------------------------------------------------- -->
+    </div><!-- end row -->
+</div>
+
+
+
+<button hidden type="button" class="btn btn-primary" data-toggle="modal" id="fireModal" data-target="#exampleModal">
+</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">
+                <p> </p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        function Delete(id) {
+            Swal.fire({
+                title: 'هل انت متاكد من حذف الابلاغ ؟',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: 'اغلاق',
+                confirmButtonText: 'حذف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/Report/Delete",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            id: id
+                        }, success: function (result) {
+                            debugger;
+                            if (result.data == true) {
+
+                                toastr.success(result.msg);
+                                setTimeout(function () {
+                                    window.location.reload();
+
+                                }, 3000);
+
+                            }
+
+
+                            if (result.data == false) {
+                                toastr.error(result.msg);
+                                setTimeout(function () {
+                                    window.location.reload();
+
+                                }, 3000);
+
+                            }
+                            setTimeout(function () {
+                                window.location.reload();
+
+                            }, 3000);
+                        },
+                        failure: function (info) {
+
+                        }
+                    })
+                }
+            })
+        }
+
+
+
+        function ReadMore(value, header) {
+
+            $("#modalBody").empty();
+            $("#modalHeader").empty();
+
+            $("#modalHeader").append(`<p class="textHeader" >${header}</p>`)
+            $("#modalBody").append(`<p class="textBody" >${value}</p>`)
+
+            $("#fireModal").click();
+
+        }
+    </script>
+}
+

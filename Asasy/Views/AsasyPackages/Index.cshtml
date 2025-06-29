@@ -1,0 +1,171 @@
+﻿@using Asasy.Domain.ViewModel.Package;
+@model IEnumerable<PackagesListViewModel>
+@{
+    ViewData["Title"] = "الباقات";
+}
+
+<div class="card-box">
+
+    <h2 class="header-title m-t-0 m-b-30">الباقات</h2>
+
+    <div>
+        <p>
+            <a asp-action="Create" asp-controller="AsasyPackages" class="btn btn-primary btn-rounded w-md waves-effect waves-light m-b-5">اضافة باقه</a>
+        </p>
+
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>الرقم</th>
+                    <th>اسم الباقه بالعربيه</th>
+                    <th>اسم الباقه بالانجليزيه</th>
+                    <th>وصف الباقه بالعربيه</th>
+                    <th>وصف الباقه بالانجليزيه</th>
+                    <th> السعر </th>
+                    <th> مده الباقه بالايام </th>
+                    <th> الحالة </th>
+                    <th>تغيير الحالة </th>
+                    <th>تاريخ الانشاء </th>
+                    <th>تعديل </th>
+                    <th>حذف </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NameAr)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NameEn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DescriptionAr)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DescriptionEn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CountDayes)
+                        </td>
+                        <td>
+                            @{
+                                if (item.IsActive == true)
+                                {
+                                    <label id="@item.Id" style="color:green;font-size: 17px;">مفعل</label>
+                                }
+                                else
+                                {
+                                    <label id="@item.Id" style="color:red;font-size: 17px;">غير مفعل</label>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <input type="button" value="تغيير الحالة" onclick="Validation('@item.Id')" class="btn btn-purple btn-rounded" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="AsasyPackages" asp-route-Id="@item.Id" class="btn btn-info btn-rounded">تعديل</a>
+                        </td>
+                        <td>
+                            <input type="button" value="حذف" onclick="Delete('@item.Id')" class="btn btn-danger btn-rounded" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+    </div><!-- end row -->
+</div>
+
+
+@section scripts{
+    <script>
+
+        function Validation(id) {
+            $.ajax({
+                url: "/AsasyPackages/ChangeState",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                success: function (result) {
+
+                    if (result.data == true) {
+                        $('#' + id).css('color', 'green');
+                        $('#' + id).html('مفعل');
+                    } else if (result.data == false) {
+                        $('#' + id).css('color', 'red');
+                        $('#' + id).html('غير مفعل');
+                    }
+                },
+                failure: function (info) {
+
+                }
+            });
+        }
+
+
+
+        function Delete(id) {
+            Swal.fire({
+                title: 'هل انت متاكد من حذف الباقه ؟',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: 'اغلاق',
+                confirmButtonText: 'حذف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/AsasyPackages/Delete",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            id: id
+                        }, success: function (result) {
+                            debugger;
+                            if (result.data == true) {
+
+                                toastr.success(result.msg);
+                                setTimeout(function () {
+                                    window.location.reload()
+                                }, 3000);
+
+                            }
+
+
+                            if (result.data == false) {
+                                toastr.error(result.msg);
+                                setTimeout(function () {
+                                }, 3000);
+
+                            }
+                            setTimeout(function () {
+                                window.location.reload();
+
+                            }, 3000);
+                        },
+                        failure: function (info) {
+
+                        }
+                    })
+                }
+            })
+        }
+
+
+    </script>
+}

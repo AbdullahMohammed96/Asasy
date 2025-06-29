@@ -1,0 +1,278 @@
+﻿@using Asasy.Domain.ViewModel.ProhibitedGoods;
+@model IEnumerable<ProhibitedGoodsViewModel>
+@{
+    ViewData["Title"] = "السلع والاعلانات الممنوعه";
+}
+ 
+
+
+<style>
+    .more {
+        border: none;
+        background: #fff;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+        color: #e10e0e;
+    }
+
+    .textBody {
+        font-size: 15px;
+        color: black
+    }
+
+    .textHeader {
+        font-size: 20px;
+        font-weight: bold;
+        color: black
+    }
+</style>
+
+
+
+
+<div class="card-box">
+
+    <h2 class="header-title m-t-0 m-b-30">السلع والاعلانات الممنوعه</h2>
+
+    <div>
+        <p>
+            <a asp-action="Create" asp-controller="ProhibitedGoods" class="btn btn-primary btn-rounded w-md waves-effect waves-light m-b-5">اضافة</a>
+        </p>
+
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>الاسم بالعربيه</th>
+                    <th>الاسم بالانجليزيه</th>
+                    <th>الوصف بالعربيه</th>
+                    <th>الوصف بالانجليزيه</th>
+                    <th>تاريخ الانشاء</th>
+                    <th> الحالة </th>
+                    <th>تغيير الحالة </th>
+                    <th>تعديل </th>
+                    <th>حذف </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.NameAr != null)
+                            {
+                                @if (item.NameAr.Length < 18)
+                                {
+                                    @item.NameAr
+                                }
+                                else
+                                {
+                                    string txt = item.NameAr.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.NameAr' , 'الاسم بالعربيه')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (item.NameEn != null)
+                            {
+                                @if (item.NameEn.Length < 18)
+                                {
+                                    @item.NameEn
+                                }
+                                else
+                                {
+                                    string txt = item.NameEn.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.NameEn' , 'الاسم بالانجليزيه')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (item.DescriptionAr != null)
+                            {
+                                @if (item.DescriptionAr.Length < 18)
+                                {
+                                    @item.DescriptionAr
+                                }
+                                else
+                                {
+                                    string txt = item.DescriptionAr.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.DescriptionAr' , 'الوصف بالعربيه')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (item.DescriptionEn != null)
+                            {
+                                @if (item.DescriptionEn.Length < 18)
+                                {
+                                    @item.DescriptionEn
+                                }
+                                else
+                                {
+                                    string txt = item.DescriptionEn.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.DescriptionEn' , 'الوصف بالانجليزيه')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+                        <td>
+                            @{
+                                if (item.IsActive == true)
+                                {
+                                    <label id="@item.Id" style="color:green;font-size: 17px;">مفعل</label>
+                                }
+                                else
+                                {
+                                    <label id="@item.Id" style="color:red;font-size: 17px;">غير مفعل</label>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <input type="button" value="تغيير الحالة" onclick="Validation('@item.Id')" class="btn btn-purple btn-rounded" />
+                        </td>
+
+                        <td>
+                            <a asp-action="Edit" asp-controller="ProhibitedGoods" asp-route-Id="@item.Id" class="btn btn-info btn-rounded">تعديل</a>
+                        </td>
+                        <td>
+                            <input type="button" value="حذف" onclick="Delete('@item.Id')" class="btn btn-danger btn-rounded" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+    </div><!-- end row -->
+</div>
+
+
+
+
+<button hidden type="button" class="btn btn-primary" data-toggle="modal" id="fireModal" data-target="#exampleModal">
+</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">
+                <p> </p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+
+        function ReadMore(value, header) {
+
+            $("#modalBody").empty();
+            $("#modalHeader").empty();
+
+            $("#modalHeader").append(`<p class="textHeader" >${header}</p>`)
+            $("#modalBody").append(`<p class="textBody" >${value}</p>`)
+
+            $("#fireModal").click();
+
+        }
+
+        function Validation(id) {
+            $.ajax({
+                url: "/ProhibitedGoods/ChangeState",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                success: function (result) {
+
+                    if (result.data == true) {
+                        $('#' + id).css('color', 'green');
+                        $('#' + id).html('مفعل');
+                    } else if (result.data == false) {
+                        $('#' + id).css('color', 'red');
+                        $('#' + id).html('غير مفعل');
+                    }
+                },
+                failure: function (info) {
+
+                }
+            });
+        }
+
+
+        function Delete(id) {
+            Swal.fire({
+                title: 'هل انت متاكد من الحذف ؟',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: 'اغلاق',
+                confirmButtonText: 'حذف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/ProhibitedGoods/Delete",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            id: id
+                        }, success: function (result) {
+                            debugger;
+                            if (result.data == true) {
+
+                                toastr.success(result.msg);
+                                setTimeout(function () {
+                                    window.location.reload()
+
+                                }, 3000);
+
+                            }
+
+
+                            if (result.data == false) {
+                                toastr.error(result.msg);
+                                setTimeout(function () {
+                                }, 3000);
+
+                            }
+                            setTimeout(function () {
+                                window.location.reload();
+
+                            }, 3000);
+                        },
+                        failure: function (info) {
+
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+}

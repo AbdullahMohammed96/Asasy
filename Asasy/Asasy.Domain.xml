@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Asasy.Domain</name>
+    </assembly>
+    <members>
+        <member name="P:Asasy.Domain.DTO.AppClientDTO.ContactUsClientDto.ContactUsClientAddDto.email">
+            <summary>
+            email or phone
+            </summary>
+        </member>
+        <member name="P:Asasy.Domain.DTO.AppProviderDTO.ContactUsProviderDto.ContactUsProviderAddDto.email">
+            <summary>
+            email or phone
+            </summary>   
+        </member>
+        <member name="P:Asasy.Domain.DTO.AuthApiDTO.UserAddDTO.projectName">
+            <summary>
+            for title of notification
+            </summary>
+        </member>
+        <member name="P:Asasy.Domain.DTO.AuthApiDTO.UserAddDTO.lang">
+             <summary>
+            ar or en
+             </summary>
+        </member>
+        <member name="P:Asasy.Domain.DTO.AuthDTO.UserInfoAddDTO.projectName">
+            <summary>
+            for title of notification
+            </summary>
+        </member>
+        <member name="P:Asasy.Domain.DTO.AuthDTO.UserInfoAddDTO.lang">
+             <summary>
+            ar or en
+             </summary>
+        </member>
+    </members>
+</doc>

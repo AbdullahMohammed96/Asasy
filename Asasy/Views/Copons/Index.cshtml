@@ -1,0 +1,174 @@
+﻿@model IEnumerable<Asasy.Domain.ViewModel.Copon.CoponViewModel>
+
+@{
+    ViewBag.Title = "الكوبونات";
+    Layout = "_Layout";
+}
+
+
+<div class="card-box">
+    @*<h4 class="header-title m-t-0 m-b-30"></h4>*@
+    <h2 class="header-title m-t-0 m-b-30">الكوبونات</h2>
+    <div>
+        <!-- -------------------------------------------------------------------------------------------------- -->
+
+        <p>
+            @Html.ActionLink("اضافة كوبون جديد", "Create", "Copons", null, new { @class = "btn btn-primary btn-rounded w-md waves-effect waves-light m-b-5" })
+        </p>
+
+
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center">
+                        الكود
+                    </th>
+                    <th style="text-align:center">
+                        عدد المستفيدين
+                    </th>
+                    <th style="text-align:center">
+                        عدد استخدام الكوبون
+                    </th>
+                    <th style="text-align:center">
+                        تاريخ انتهاء الخصم
+                    </th>
+                    <th style="text-align:center">
+                        نسبة الخصم
+                    </th>
+                    <th style="text-align:center">
+                        الحد الاقصى للخصم(بالريال)
+                    </th>
+                    <th style="text-align:center">
+                        الحالة
+                    </th>
+                    <th style="text-align:center">
+                        تغيير الحالة
+                    </th>
+                    <th style="text-align:center">
+                        تعديل
+                    </th>
+                    <th style="text-align:center">
+                        حذف
+                    </th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @item.coponCode
+                    </td>
+                    <td>
+                        @item.count
+                    </td>
+                    <td>
+                        @item.countUsed
+                    </td>
+                    <td>
+                        @item.expirdate
+                    </td>
+                    <td>
+                        % @item.discount
+                    </td>
+                    <td>
+                        @item.limtdiscount
+                    </td>
+                    <td>
+                        @{
+                            if (item.isActive == true)
+                            {
+                                <label id="@item.Id" style="color:green;font-size: 17px;">مفعل</label>
+                            }
+                            else
+                            {
+                                <label id="@item.Id" style="color:red;font-size: 17px;">غير مفعل</label>
+                            }
+                        }
+                    </td>
+
+                    <td>
+                        <input type="button" value="تغير الحالة" onclick="Validtion('@item.Id')" class="btn btn-purple btn-rounded" />
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-controller="Copons" asp-route-id="@item.Id" class="btn btn-purple btn-rounded">تعديل</a>
+                    </td>
+                    <td>
+                        <input type="button" value="حذف" onclick="Delete('@item.Id')" class="btn btn-purple btn-rounded" />
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+
+        </table>
+    </div><!-- end row -->
+</div>
+
+
+@section scripts
+    {
+    <script>
+        function Validtion(id) {
+            $.ajax({
+                url: "/Copons/ChangeState",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                success: function (result) {
+
+                    if (result.data == true) {
+                        $('#' + id).css('color', 'green');
+                        $('#' + id).html('مفعل');
+                    } else if (result.data == false) {
+                        $('#' + id).css('color', 'red');
+                        $('#' + id).html('غير مفعل');
+                    }
+                },
+                failure: function (info) {
+
+                }
+            });
+        }
+
+        function Delete(id) {
+            Swal.fire({
+                title: 'هل انت متاكد من حذف هذا العنصر  ؟',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: 'اغلاق',
+                confirmButtonText: 'حذف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/Copons/Delete",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            id: id
+                        }, success: function (result) {
+                            if (result.data == true) {
+                                toastr.success("تم الحذف بنجاح");
+                                setTimeout(function () {
+                                }, 3000);
+
+                            }
+                            window.location.reload();
+
+                        },
+                        failure: function (info) {
+
+                        }
+                    })
+                }
+            })
+        }
+
+    </script>
+}

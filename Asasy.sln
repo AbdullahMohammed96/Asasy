@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AAITPayment", "AAITPayment\AAITPayment.csproj", "{EDB0AC07-8F84-475C-B492-479A89C68CBC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asasy", "Asasy\Asasy.csproj", "{F6C068B6-FF7B-4842-A33D-B9FF1B76DAE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asasy.Domain", "Asasy.Domain\Asasy.Domain.csproj", "{D3B80AA5-06E7-4EE4-BAB0-96C3D59E683A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asasy.Infrastructure", "Asasy.Infrastructure\Asasy.Infrastructure.csproj", "{3B5089DB-2799-48DC-8CA1-D36DD081B7FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asasy.Persistence", "Asasy.Persistence\Asasy.Persistence.csproj", "{2667D822-E5B6-4990-AE52-6324273496B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asasy.Service", "Asasy.Service\Asasy.Service.csproj", "{8337A350-613C-493B-83E7-7E5CE9CF0EFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDB0AC07-8F84-475C-B492-479A89C68CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB0AC07-8F84-475C-B492-479A89C68CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB0AC07-8F84-475C-B492-479A89C68CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB0AC07-8F84-475C-B492-479A89C68CBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6C068B6-FF7B-4842-A33D-B9FF1B76DAE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6C068B6-FF7B-4842-A33D-B9FF1B76DAE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6C068B6-FF7B-4842-A33D-B9FF1B76DAE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6C068B6-FF7B-4842-A33D-B9FF1B76DAE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B80AA5-06E7-4EE4-BAB0-96C3D59E683A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B80AA5-06E7-4EE4-BAB0-96C3D59E683A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B80AA5-06E7-4EE4-BAB0-96C3D59E683A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B80AA5-06E7-4EE4-BAB0-96C3D59E683A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5089DB-2799-48DC-8CA1-D36DD081B7FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5089DB-2799-48DC-8CA1-D36DD081B7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5089DB-2799-48DC-8CA1-D36DD081B7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B5089DB-2799-48DC-8CA1-D36DD081B7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2667D822-E5B6-4990-AE52-6324273496B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2667D822-E5B6-4990-AE52-6324273496B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2667D822-E5B6-4990-AE52-6324273496B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2667D822-E5B6-4990-AE52-6324273496B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8337A350-613C-493B-83E7-7E5CE9CF0EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8337A350-613C-493B-83E7-7E5CE9CF0EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8337A350-613C-493B-83E7-7E5CE9CF0EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8337A350-613C-493B-83E7-7E5CE9CF0EFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C52DD3DF-DF60-4491-BB2A-FA2656F6A39A}
+	EndGlobalSection
+EndGlobal

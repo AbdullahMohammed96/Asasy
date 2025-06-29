@@ -1,0 +1,88 @@
+﻿@page
+@model EditUserModel
+@using Asasy.Domain.Entities.UserTables;
+@{
+    ViewData["Title"] = "تعديل بيانات المستخدم";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user =await UserManager.GetUserAsync(User);
+    var userId = user.Id;
+    //var user = await UserManager.FindByIdAsync(userId);
+}
+
+
+<div class="card-box">
+    <h2 class="header-title m-t-0 m-b-30">@ViewData["Title"]</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @*asp-route-returnUrl="@Model.ReturnUrl"*@
+            <form enctype="multipart/form-data" method="post">
+                 
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="Input.Id" value="@userId" />
+                <div class="form-group">
+                    <label asp-for="Input.Email">البربد الالكتروني</label>
+                    <input asp-for="Input.Email" value="@user.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                @*<div class="form-group">
+                <label asp-for="Input.FullName">اسم المستخدم</label>
+                <input asp-for="Input.FullName" class="form-control" />
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>*@
+                <div class="form-group">
+                    <label>تعديل كلمة المرور</label>
+                    <a href="~/Identity/Account/Manage/ChangePassword" class="btn-new-style btn-rounded w-100">تعديل كلمة المرور</a>
+                </div>
+                @if (user.ImgProfile != null)
+                {
+
+                    <div class="form-group">
+                        <label asp-for="Input.PhotoPath">الصورة القديمة</label>
+                        <img src="~/@user.ImgProfile" width="100px" height="100px" style="display: block" />
+                        <span asp-validation-for="Input.PhotoPath" class="text-danger"></span>
+                    </div>
+
+                }
+                <div class="form-group">
+                    <label asp-for="Input.Img">صورة جديدة</label>
+                    <input asp-for="Input.Img" class="form-control" id="profileImage" />
+                    <span asp-validation-for="Input.Img" class="text-danger"></span>
+                </div>
+
+                <button type="button" class="btn-new-style btn-rounded" onclick="Validation()">حفظ</button>
+                <button type="submit" hidden class="btn-new-style btn-rounded" id="btnSubmit">حفظ</button>
+            </form>
+            <a asp-action="Index" asp-controller="Home" class="btn-black">العودة الى الرئيسية</a>
+
+        </div>
+   
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function Validation() {
+            const arr = ['jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG']
+
+            debugger;
+            var extenstionImage = document.getElementById("profileImage").value
+            if (extenstionImage != "") {
+                var img = extenstionImage.split(".")[1];
+
+                if (!arr.includes(img)) {
+                    var str = "فضلا قم بتحميل الصوره بطريقه صحيحه"
+                    toastr.error(str)
+                    return false;
+
+                }
+            }
+            $("#btnSubmit").click();
+
+        }
+    </script>
+}
+

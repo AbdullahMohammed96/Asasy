@@ -1,0 +1,54 @@
+﻿@model Asasy.Domain.ViewModel.Question.CreateQuestionViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card-box">
+    <h2 class="header-title m-t-0 m-b-30">الأسئلة</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="QuestionAr" class="control-label">السؤال بالعربية</label>
+                    <input asp-for="QuestionAr" class="form-control" />
+                    <span asp-validation-for="QuestionAr" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnswerAr" class="control-label">الاجابة العربية</label>
+                    <input asp-for="AnswerAr" class="form-control" />
+                    <span asp-validation-for="AnswerAr" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="QuestionEn" class="control-label">السؤال بالانجليزية</label>
+                    <input asp-for="QuestionEn" class="form-control" />
+                    <span asp-validation-for="QuestionEn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnswerEn" class="control-label">الاجابة بالانجليزية</label>
+                    <input asp-for="AnswerEn" class="form-control" />
+                    <span asp-validation-for="AnswerEn" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="submit" value="اضافة" class="btn-new-style btn-rounded" />
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div>
+                        <a asp-action="Index" class="btn-black">العودة الى الرئيسية</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

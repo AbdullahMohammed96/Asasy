@@ -1,0 +1,93 @@
+﻿@model Asasy.Domain.ViewModel.Copon.CoponCreateViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="card-box">
+
+    <h2 class="header-title m-t-0 m-b-30">اضافة كوبون جديد</h2>
+
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="IsActive" />
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="CoponCode" class="control-label">كود الكوبون</label>
+                    <input asp-for="CoponCode" class="form-control" readonly />
+                    <span asp-validation-for="CoponCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Count" class="control-label">عدد المستفيدين</label>
+                    <input asp-for="Count" class="form-control" />
+                    <span asp-validation-for="Count" class="text-danger"></span>
+                </div>
+            </div>
+            @*<div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="CountUsed" class="control-label">عدد استخدام الكوبون</label>
+                        <input asp-for="CountUsed" class="form-control" />
+                        <span asp-validation-for="CountUsed" class="text-danger"></span>
+                    </div>
+                </div>*@
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Discount" class="control-label">نسبة الخصم</label>
+                    <input type="number" asp-for="Discount" class="form-control" />
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="limt_discount" class="control-label">الحد الاقصى للخصم(بالريال)</label>
+                    <input type="number" asp-for="limt_discount" class="form-control" />
+                    <span asp-validation-for="limt_discount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="expirdate" class="control-label">تاريخ انتهاء الكوبون</label>
+                    <input asp-for="expirdate" type="date" class="form-control" id="date_picker" />
+                    <span asp-validation-for="expirdate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="submit" value="حفظ" class="btn-new-style btn-rounded" />
+                    @*<input type="submit" onclick="Validtion()" id="btnSave" value="اضافة" class="btn-new-style" />*@
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div>
+                    <a asp-action="Index" class="btn-black">العودة للرئيسية</a>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+            <script language="javascript">
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            $('#date_picker').attr('min', today);
+        </script>
+}

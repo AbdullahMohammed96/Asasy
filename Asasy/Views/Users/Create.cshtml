@@ -1,0 +1,105 @@
+﻿@using Asasy.Domain.ViewModel.Users;
+@model CreateUserViewModel
+
+@{
+    ViewData["Title"] = "اضافه";
+}
+
+<div class="card-box">
+    <h2 class="header-title m-t-0 m-b-30">اضافه عميل</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form enctype="multipart/form-data" method="post" id="myForm">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Image" class="control-label">الصوره الشخصيه</label>
+                    <input asp-for="Image" class="form-control" accept="image/*" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"> الاسم</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"> البريد الالكتروني (اختياري)</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Code" class="control-label">كود الدوله</label>
+                   
+                    <input asp-for="Code" class="form-control" disabled value="+966"/>
+
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label">رقم الجوال</label>
+                    <input type="number" asp-for="Phone" class="form-control" id="PhoneNumber">
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="form-group">
+                    <input type="button" value="اضافه" class="btn-new-style btn-rounded" onclick="Validation()" />
+                    <input type="submit" hidden value="اضافه" id="btnSubmit" class="btn-new-style btn-rounded" />
+                </div>
+                <div>
+                    <a asp-action="Index" class="btn-black">العودة الى الرئيسية</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+
+        document.querySelector("#PhoneNumber").addEventListener("keypress", function (evt) {
+            if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+                evt.preventDefault();
+            }
+        });
+
+        function Validation() {
+            debugger
+            var name = $("#Name").val();
+            var nameWithoutSpaces = name.trim()
+
+            if ($("#Image").val() == "") {
+                toastr.error("فضلا قم بادخال الصوره")
+                return false;
+            }
+
+            if (nameWithoutSpaces == "") {
+                toastr.error("فضلا قم بادخال الاسم")
+                return false;
+            }
+
+           
+
+            if ($("#Phone").val() == "") {
+                toastr.error("فضلا قم بادخال رقم الجوال")
+                return false;
+            }
+
+            $("#btnSubmit").click()
+        }
+
+
+    </script>
+}
+

@@ -1,0 +1,182 @@
+﻿@model AAITPayment.MyFatoorah.Model.MyFatoorahCallBackUrlConfig
+@{
+    ViewData["Title"] = "اختر طريقة الدفع";
+    Layout = null;
+
+    var routeValues = ViewBag.RouteValues as AAITPayment.MyFatoorah.Model.RouteValues;
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    @* <title>@ViewData["Title"] - هدية خاصة</title> *@
+    <link rel="shortcut icon" href="~/images/LogoAthathy.png">
+    <title>أثاثي</title>
+    <!-- Bootstrap CSS -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/all.css" rel="stylesheet" type="text/css">
+    <link href="~/css/owl.carousel.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/owl.theme.default.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/style.css" rel="stylesheet" type="text/css">
+    @* <link rel="shortcut icon" href="~/imges/Designbolts.png" /> *@
+
+    <!---->
+    <!-- toastr -->
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
+
+    <style>
+        .list-group {
+            margin: 50px 0;
+        }
+
+        .list-group-item-action:hover:not(.active) {
+            background: #FFFFFF !important;
+        }
+
+        .list-group-item-action input[type="radio"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            transform: scale(1);
+        }
+
+        .list-group-item.active {
+            color: #333435;
+            background: #b8bcbf;
+            border-color: #b8bcbf;
+        }
+
+        .btn-main {
+            display: inline-block;
+            background: #edb174;
+            width: 120px;
+            max-width: 100%;
+            padding: 0;
+            border-radius: 8px;
+            text-align: center;
+            text-shadow: 0 0;
+            font-weight: 500;
+            margin: 20px auto;
+            height: 50px;
+            line-height: 50px;
+            font-size: 20px !important;
+            color: #FFF;
+            font-weight: bolder;
+            letter-spacing: 2px
+        }
+    </style>
+    <!--[if it IE 9]>
+            <script src="~/js/html5shiv.min.js" type="text/javascript"></script>
+    <![end if]-->
+</head>
+<body>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="list-group" id="paymentMethods">
+                <!--Payment methods will be here-->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        debugger;
+        //toastr configuration
+        toastr.options = {
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "fadeIn": 300,
+            "fadeOut": 1000,
+            "timeOut": 5000,
+            "extendedTimeOut": 1000
+        }
+
+
+        $.ajax({
+            url: "/Fatoorah/InitiatePayment",
+            type: "GET",
+            dataType: "json",
+            data: {
+                amount: @routeValues.Amount
+            },
+            success: function (result) {
+                var html = '';
+                for (var i = 0; i < result.length; i++) {
+
+                    html += '<div class="list-group-item list-group-item-action"><div class="d-flex mb-2 justify-content-between"><h6>العملة</h6><h6>' + result[i].currencyIso + '</h6></div><div class="d-flex justify-content-between align-items-center mb-3"><h5 class="mb-1">' + result[i].paymentMethodEn + '</h5><img src="' + result[i].imageUrl + '" height="20px" width="40px" /></div><div class="d-flex justify-content-between"><h6>التكلفة الكلية</h6><h6>' + result[i].totalAmount + '</h6></div><input type="radio" id="payment" value=' + result[i].totalAmount + ' data-value="' + result[i].paymentMethodId + '" name="payment" /></div>'
+                }
+
+                $("#paymentMethods").append(html + '<button type="button" class="btn-main" onclick="confirmPayment();">تأكيد</button>');
+            },
+            failure: function (info) {
+
+            }
+        });
+    })
+
+    $('body').on("change", ".list-group-item-action input[type = 'radio']", function () {
+
+        $(".list-group-item-action input[type='radio']").parent().removeClass("active");
+
+        $(this).parent().addClass("active");
+
+    });
+
+    function confirmPayment() {
+        debugger;
+        var invoiceValue = parseFloat($(".list-group-item-action.active #payment:checked").val());
+        console.log(invoiceValue);
+        var methodId = $(".list-group-item-action.active #payment:checked").attr("data-value");
+
+        if (methodId === undefined) {
+            //toastr.options.positionClass = 'toast-bottom-center';
+            toastr.warning('من فضلك اختر وسيلة الدفع');
+        }
+        else {
+            $.ajax({
+                url: "/Fatoorah/ExecutePayment",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    PaymentMethodId: methodId,
+                    InvoiceValue: invoiceValue,
+                    ErrorUrl: `@Model.LiveHostServer@Model.ControllerName/@Model.FailActionName`,
+                    CallBackUrl: `@Model.LiveHostServer@Model.ControllerName/@Model.SuccessActionName?amount=${invoiceValue}&@Html.Raw(Model.QueryParamsRouteValues)`,
+                    Type: @routeValues.Type,
+                    UserId: "@routeValues.UserId",
+                    adsId: "@routeValues.adsId",
+                    packageId: "@routeValues.packageId",
+                    userPackageId: "@routeValues.userPackageId",
+                },
+                success: function (result) {
+                    if (result.isSuccess) {
+                        window.location.replace(result.data.paymentURL);
+                    }
+
+                    var html = '';
+                },
+                failure: function (info) {
+
+                }
+            });
+        }
+    }
+</script>
+
+<!-- toastr -->
+<script src="~/lib/toastr.js/toastr.min.js"></script>
+
+
+

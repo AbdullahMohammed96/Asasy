@@ -1,0 +1,150 @@
+﻿@using Asasy.Domain.ViewModel.CategoryModel;
+@model MainCategoryViewModel
+
+@{
+    ViewData["Title"] = "CreateMainCategory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+
+
+
+<div class="card-box">
+    <h2 class="header-title m-t-0 m-b-30">اضافة قسم جديد</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="CreateMainCategory" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="idCat" value="@ViewBag.idCat" />
+                <input type="hidden" name="CatName" value="@ViewBag.CatName" />
+                <div class="form-group">
+                    <label asp-for="NameAr" class="control-label">الاسم بالعربية</label>
+                    <input asp-for="NameAr" class="form-control" />
+                    <span asp-validation-for="NameAr" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NameEn" class="control-label">الاسم بالانجليزية</label>
+                    <input asp-for="NameEn" class="form-control" />
+                    <span asp-validation-for="NameEn" class="text-danger"></span>
+                </div>
+
+              
+
+                @* @if (ViewBag.idCat == 0)
+                { *@
+
+                <div class="form-group">
+                    <label asp-for="CreateImg" class="control-label">الصورة</label>
+                    <input asp-for="CreateImg" class="form-control" accept="image/*" />
+                    <span asp-validation-for="CreateImg" class="text-danger"></span>
+                </div>
+
+                @* } *@
+                <div class="col-md-12">
+                    <div class="form-group">
+
+                        <input type="button" value="اضافة" onclick="Validtion()" class="btn-new-style" />
+                        <input type="submit" id="btnSave" style="display:none" value="اضافة" class="btn-new-style" />
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div>
+                        <a asp-action="MainCategory" class="btn-black">العودة الى الرئيسية</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="IsMainCategory" value="@ViewBag.idCat" />
+
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+
+    <script>
+        document.getElementById("NameAr").addEventListener("keydown", function (event) {
+            // Get the key code of the pressed key
+            const key = event.key;
+
+            // Prevent input if the key is a number (0-9) or the numpad number keys
+            if (!isNaN(key) && key !== " ") {
+                event.preventDefault(); // Block the number input
+            }
+        });
+
+        document.getElementById("NameEn").addEventListener("keydown", function (event) {
+            // Get the key code of the pressed key
+            const key = event.key;
+
+            // Prevent input if the key is a number (0-9) or the numpad number keys
+            if (!isNaN(key) && key !== " ") {
+                event.preventDefault(); // Block the number input
+            }
+        });
+
+
+        function Validtion() {
+            var flg = true;
+
+            if ($("#NameAr").val() == "") {
+                toastr.error('من فضلك ادخل الاسم بالعربية');
+                $("#NameAr").focus();
+                flg = false;
+                return false;
+            }
+            if ($("#NameEn").val() == "") {
+                toastr.error('من فضلك ادخل الاسم بالانجليزية');
+                $("#NameEn").focus();
+                flg = false;
+                return false;
+            }
+
+            //If Create MainCategory
+            // if ($("#IsMainCategory").val() == 0) {
+            //     if ($("#Desc").val() == "") {
+            //         toastr.error('من فضلك ادخل الاسم بالعربية');
+            //         $("#Desc").focus();
+            //         flg = false;
+            //         return false;
+            //     }
+            //     if ($("#DescEn").val() == "") {
+            //         toastr.error('من فضلك ادخل الاسم بالانجليزية');
+            //         $("#DescEn").focus();
+            //         flg = false;
+            //         return false;
+            //     }
+            // }
+            /************************/
+
+            if ($("#CreateImg").val() == 0) {
+                toastr.error('من فضلك اختر الصورة');
+                $("#CreateImg").focus();
+                flg = false;
+                return false;
+            }
+
+            if (flg == true) {
+                $("#btnSave").click();
+            }
+        }
+    </script>
+
+}

@@ -1,0 +1,660 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Asasy</name>
+    </assembly>
+    <members>
+        <member name="M:Asasy.Controllers.Api.AuthController.RegisterClient(Asasy.Domain.DTO.AuthApiDTO.UserAddDTO)">
+            <summary>
+            Add New User 
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                           {
+                         "imgProfile": file,
+                         "userName": "ahmed",
+                         "email": "ahmed@gmail.com",
+                         "phone": "051231231",
+                         "phoneCode": "+966",
+                         "deviceId": "deviceId",
+                         "deviceType": "deviceType",
+                         "projectName": "projectName",
+                          }
+                  
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.AuthController.ConfirmCodeRegister(Asasy.Domain.DTO.AuthDTO.ConfirmCodeAddDto)">
+             <summary>
+             Confirm Code for Register 
+             </summary>
+             <remarks>
+            Sample request:
+                 
+             
+             
+                                    
+                                        {
+                                      "userId": "c3eed5f3-ca71-4833-ace9-62ee3b608d95",
+                                      "code": 1234,
+                                       }
+             </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.AuthController.ResendCode(Asasy.Domain.DTO.AuthDTO.ResendCodeAddDto)">
+            <summary>
+            resend Code for Register 
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                            {
+                            "id": "c3eed5f3-ca71-4833-ace9-62ee3b608d95",
+                            "phone": "01234567895",
+                            "code": 1234,
+                             }
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.AuthController.Login(Asasy.Domain.DTO.AuthApiDTO.LoginDto)">
+            <summary>
+            LogIn
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+            
+            
+                             {
+                             "phone": "01234567895",
+                             "phoneCode": "+966",
+                              }
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.AuthController.ChangeLanguage">
+            <summary>
+            Change app Language 
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.AuthController.Logout(Asasy.Domain.DTO.AuthApiDTO.LogoutDto)">
+            <summary>
+            user logout
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Asasy.Controllers.Api.AuthController.RemoveAccount" -->
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AddNewAds(Asasy.Domain.DTO.ClientLogicDto.AddNewAdsDto)">
+            <summary>
+            List Of Main Categories; Which contains only sub-categories.
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.SubscribeInPackageByWallet(System.Int32,System.Int32)">
+            <summary>
+            Subscribe to a package to distinguish the advertisement
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.Slider">
+            <summary>
+            Get List Of Sliders
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.Home(System.Int32,System.Int32)">
+            <summary>
+            Ads In Home Client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.FiltrationAds(Asasy.Domain.DTO.ClientLogicDto.FiltrationAdsDto)">
+            <summary>
+            Filtration Ads in home
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AdsByLocation(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Filtration Ads in home
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.ListOfAdsByCategoryAndSubCategoryAndTitle(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            List of ads by only { categoryId } or { categoryId and subCategoryId } ot { categoryId and subCategoryId and productName }
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AdDetails(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get Ad Details for client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AddNewCommentForAd(System.Int32,System.String)">
+            <summary>
+            Add New Comment For Ad
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.NewReplayForComment(System.Int32,System.String)">
+            <summary>
+            Add New replay to Comment For Ad
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AllCommentsForAds(System.Int32)">
+            <summary>
+            All Comments For Ads
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AddAdToFavorite(System.Int32)">
+            <summary>
+            Add Ad To Favorite
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.RemoveAdFromFavorite(System.Int32)">
+            <summary>
+            Remove Ad From Favorite
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.FavoriteList">
+            <summary>
+            Get List of favorite user
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.ReportAd(Asasy.Domain.DTO.ClientLogicDto.ReportAdsDto)">
+            <summary>
+            Add new report for ad by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.ReportAd(Asasy.Domain.DTO.ClientLogicDto.ReportProviderDto)">
+            <summary>
+            Add new report for provider by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.FollowAd(System.Int32)">
+            <summary>
+            Follow ad by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.FollowProvider(System.String)">
+            <summary>
+            Follow provider by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.UnFollowAd(System.Int32)">
+            <summary>
+            UnFollow  ad by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.UnFollowProvider(System.String)">
+            <summary>
+            UnFollow provider  by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.ListOfFollowsAd">
+            <summary>
+            Get List of Follows Ad
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.ListOfFollowsProvider">
+            <summary>
+            Get List of Follows Provider
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.GetProviderInfo(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get provider info for client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AddNewRateForProvider(Asasy.Domain.DTO.ClientLogicDto.NewRateToProviderDto)">
+            <summary>
+            Add New Rate For Provider by client
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.AllCommentsForProvider(System.String)">
+            <summary>
+            Get all comments for provider
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.GetMyAds(System.Int32,System.Int32)">
+            <summary>
+            Get My Ads for provider
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.CheckIsPackageIsEndedOrNot">
+            <summary>
+            Cron job to check is package date is ended or not
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.ResubscribeInPackage(System.Int32)">
+            <summary>
+            Resubscribe to the package
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.GetAdsDetailsToUpdate(System.Int32)">
+             <summary>
+            Get Ads Details To Update
+             </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.ClientLogicController.RemoveAd(System.Int32)">
+            <summary>
+            Remove Ad
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetWallet">
+            <summary>
+            Get Wallet for user
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetWallet(System.Double)">
+            <summary>
+            Calculate Commission App
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.PayAppCommissionByWallet(System.Double)">
+            <summary>
+            Pay App Commission By Wallet
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetPolicy">
+            <summary>
+            Get Policy
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetDiscountSystem">
+            <summary>
+            Get Discount System
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetTermsAndConditions">
+            <summary>
+            Get Terms And Conditions
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetContactWithUs">
+            <summary>
+            Get Contact With Us
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.GetProhibitedList">
+            <summary>
+            Get Prohibited List
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.Footer">
+            <summary>
+            Get Prohibited List
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.AddNewComplaint(Asasy.Domain.DTO.More.AddNewComplaintsDto)">
+            <summary>
+            Add New Complaint
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.ComplaintsList(System.Int32)">
+            <summary>
+            Complaints List
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                                 TypeComplaint
+                             {
+                                 Waiting=1,
+                                 Finished=2
+                             }
+                  
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.MoreController.ComplaintInfo(System.Int32)">
+            <summary>
+            Get Complaint Info
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                                 TypeComplaint
+                             {
+                                 Waiting=1,
+                                 Finished=2
+                             }
+                  
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderClientController.ListcurrentOrderForUser(System.String)">
+            <summary>
+            List current Order For user
+            </summary>
+            <remarks>
+            Sample request:
+            [
+              {
+                "orderId": 7,
+                "orderType": "tvkin",
+                "name": "Api@aait.sa",
+                "img": "https://localhost:44306/images/Category/d5e17d36d2db4c53af3662bcd23aef4d.jpg",
+                "location": "test",
+                "stutes": "تم الموافقه من قبل العميل ع العرض",
+                "date": "08/11/2021 09:21"
+              }
+            ]
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderClientController.ListNewOrderForUser(System.String)">
+            <summary>
+            List new Order For user
+            </summary>
+            <remarks>
+            Sample request:
+            [
+              {
+                "orderId": 7,
+                "orderType": "tvkin",
+                "name": "Api@aait.sa",
+                "img": "https://localhost:44306/images/Category/d5e17d36d2db4c53af3662bcd23aef4d.jpg",
+                "location": "test",
+                "stutes": "تم الموافقه من قبل العميل ع العرض",
+                "date": "08/11/2021 09:21"
+              }
+            ]
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderClientController.ListEndedOrderForUser(System.String)">
+            <summary>
+            List Ended Order For user
+            </summary>
+            <remarks>
+            Sample request:
+            [
+              {
+                "orderId": 7,
+                "orderType": "tvkin",
+                "name": "Api@aait.sa",
+                "img": "https://localhost:44306/images/Category/d5e17d36d2db4c53af3662bcd23aef4d.jpg",
+                "location": "test",
+                "stutes": "تم الموافقه من قبل العميل ع العرض",
+                "date": "08/11/2021 09:21"
+              }
+            ]
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderClientController.GetOrderInfoForUser(System.Int32,System.String)">
+            <summary>
+            Get Order Info For User
+            </summary>
+            <remarks>
+            Sample request:
+            {
+              "orderId": 7,
+              "userName": "amr",
+              "providerName": "Api@aait.sa",
+              "date": "08/11/2021 09:21",
+              "cityName": "المنصوره",
+              "imgs": [
+                "\thttps://localhost:44306/images/Category/7660df3475a1487c8658c8bc5e057bba.jpg"
+              ],
+              "info": "غلات",
+              "stutes": 2,
+              "price": 100
+            } 
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderClientController.UseCoupon(Asasy.Domain.DTO.CouponDto.UseCouponDto)">
+            <summary>
+            Use Coupon 
+            </summary>
+            <remarks>
+            Sample request:
+              {
+               lastTotal:100
+             }
+            </remarks>
+            <param couponCode="UseCouponDto.couponCode">ar or en</param>
+            <param couponId="UseCouponDto.couponId"></param>
+            <param userId="UseCouponDto.userId"></param>
+            <param total="UseCouponDto.total"></param>
+            <param lang="UseCouponDto.lang"></param>
+            <returns>return last Total </returns>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderProviderController.ListcurrentOrderForProvider(System.String)">
+            <summary>
+            List current Order For Provider
+            </summary>
+            <remarks>
+            Sample request:
+            [
+              {
+                "orderId": 7,
+                "orderType": "tvkin",
+                "name": "Api@aait.sa",
+                "img": "https://localhost:44306/images/Category/d5e17d36d2db4c53af3662bcd23aef4d.jpg",
+                "location": "test",
+                "stutes": "تم الموافقه من قبل العميل ع العرض",
+                "date": "08/11/2021 09:21"
+              }
+            ]
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderProviderController.ListAdsNewOrderForProvider(System.String)">
+             <summary>
+             List New Order For Provider
+             </summary>
+             <remarks>
+             Sample request:
+             "order": [
+               {
+                 "orderId": 7,
+                 "orderType": "tvkin",
+                 "name": "Api@aait.sa",
+                 "img": "https://localhost:44306/images/Category/d5e17d36d2db4c53af3662bcd23aef4d.jpg",
+                 "location": "test",
+                 "stutes": "تم الموافقه من قبل العميل ع العرض",
+                 "date": "08/11/2021 09:21"
+               }
+             ],
+               "ads": [
+              "id": 1,
+              "img": "images/Slider/014f9599d6104ea58221bf79554a157c.jpeg"
+            }
+             ]
+             </remarks>
+             <param lang="lang">ar or en</param>
+             <response code="200">Sucess</response>
+             <response code="400">BadRequest Or Exption</response>
+             <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderProviderController.ListEndedOrderForProvider(System.String)">
+            <summary>
+            List Ended Order For Provider
+            </summary>
+            <remarks>
+            Sample request:
+            [
+              {
+                "orderId": 7,
+                "orderType": "tvkin",
+                "name": "Api@aait.sa",
+                "img": "https://localhost:44306/images/Category/d5e17d36d2db4c53af3662bcd23aef4d.jpg",
+                "location": "test",
+                "stutes": "تم الموافقه من قبل العميل ع العرض",
+                "date": "08/11/2021 09:21"
+              }
+            ]
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.OrderProviderController.GetOrderInfoForProvider(System.Int32,System.String)">
+            <summary>
+            Get Order Info For privider
+            </summary>
+            <remarks>
+            Sample request:
+            {
+              "orderId": 7,
+              "userName": "amr",
+              "providerName": "Api@aait.sa",
+              "date": "08/11/2021 09:21",
+              "cityName": "المنصوره",
+              "imgs": [
+                "\thttps://localhost:44306/images/Category/7660df3475a1487c8658c8bc5e057bba.jpg"
+              ],
+              "info": "غلات",
+              "stutes": 2,
+              "price": 100
+            } 
+            </remarks>
+            <param lang="lang">ar or en</param>
+            <response code="200">Sucess</response>
+            <response code="400">BadRequest Or Exption</response>
+            <response code="500">internal server error</response>
+        </member>
+        <member name="M:Asasy.Controllers.Api.SharedController.MaiCategories">
+            <summary>
+            List Of Main Categories; Which contains only sub-categories.
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.SharedController.SubCategories(System.Int32)">
+            <summary>
+            List Of SubCategories.
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.SharedController.ListOfRegions">
+            <summary>
+            List Of Regions; Which contains only cities
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.SharedController.ListOfCitiesByRegion(System.Int32)">
+            <summary>
+            List Of Cities by RegionId; Which contains only districts
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.SharedController.ListOfDistrictsByCity(System.Int32)">
+            <summary>
+            List Of District by cityId 
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.GetDataOfUser">
+            <summary>
+            get user data
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.UpdateDataUser(Asasy.Domain.DTO.AuthApiDTO.UpdateDataUserDto)">
+            <summary>
+            update data for user
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                            {
+                            "userName": "abdelrahman_elwsef",
+                            "email": "abdelrahman12@gmail.com",
+                            "imgProfile": file,
+                             }
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.SendCodeToUpdate(Asasy.Domain.DTO.AuthDTO.SendCodeToPhoneDto)">
+            <summary>
+            send otp to phone number; first sende get old phone number from user model .. second sende for new phone number from client
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                            {
+                            "userName": "abdelrahman_elwsef",
+                            "email": "abdelrahman12@gmail.com",
+                            "imgProfile": file,
+                             }
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.CheckCodeIsCorrectOrNot(System.Int32)">
+            <summary>
+            use this service for first check code when send otp to old phone
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                            {
+                            "code": "1234
+                             }
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.ChangePhoneNumberByCode(Asasy.Domain.DTO.AuthDTO.ChangePhoneNumberByCodeDto)">
+            <summary>
+            use this service when confirm code for new phone number and change phone 
+            </summary>
+            <remarks>
+            Sample request:
+            
+            
+            
+                            {
+                            "phoneNumber": "501231231
+                            "phoneCode": "1234
+                            "code": "1234
+                             }
+            </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.RemoveAllNotify">
+            <summary>
+            Remove All Notify
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.ChangeNotify(System.Boolean)">
+            <summary>
+            Close Notification for users
+            </summary>
+        </member>
+        <member name="M:Asasy.Controllers.Api.UserController.ListOfNotifyUser">
+             <summary>
+             List Notification for Client
+             </summary>
+             <remarks>
+            Sample response:
+            
+             
+             
+             
+                           {
+                          "id": "1",
+                          "text": any,
+                          "date": 18/10/2021,
+                          "type":1,
+                           }
+             </remarks>
+        </member>
+        <member name="M:Asasy.Controllers.Shared.Back_UpController.DownloadFile(System.String,System.String)">
+            [HttpGet]
+        </member>
+    </members>
+</doc>

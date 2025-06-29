@@ -1,0 +1,357 @@
+﻿@using Asasy.Domain.ViewModel.Ads;
+@model AdEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int oldIndexImage = -1;
+
+}
+
+<style>
+
+    .mult-img-result {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 5px
+    }
+    .btnAddImg_ {
+        height: 99px;
+        width: 99px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        background: #181818;
+        border: 1px dashed #7ec540;
+        border-radius: 5px;
+        overflow: hidden
+    }
+
+        .btnAddImg_ > input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            font-size: 0;
+            height: 100%;
+            z-index: 2;
+            cursor: pointer
+        }
+
+    .uploaded-image {
+        position: relative;
+        width: 99px;
+        height: 99px;
+        border-radius: 5px;
+        border: 1px solid #EEE;
+    }
+
+        .uploaded-image > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center
+        }
+
+    .remove-appendedd {
+        position: absolute;
+        background: crimson;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        font-size: 11px;
+        top: 5px;
+        right: 5px;
+    }
+
+</style>
+
+<div class="card-box">
+    <h2 class="header-title m-t-0 m-b-30">تعديل الاعلان</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form enctype="multipart/form-data" asp-action="EditAd" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="AdsId" />
+
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">العنوان</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label">السعر</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StatusProduct" class="control-label">حاله المنتج</label>
+                    <select asp-for="StatusProduct" class="form-control">
+                        <option value="1">جديد</option>
+                        <option value="2">مستعمل</option>
+                    </select>
+                    <span asp-validation-for="StatusProduct" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">الوصف</label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PhoneCode" class="control-label">كود الدوله</label>
+                    <input asp-for="PhoneCode" class="form-control" disabled value="+966"/>
+                    <span asp-validation-for="PhoneCode" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label">رقم الجوال</label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ShowPhone" class="control-label">عرض رقم الجوال</label>
+                    <input asp-for="ShowPhone" class="form-control">
+                    <span asp-validation-for="ShowPhone" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" asp-for="CategoryId" />
+                <div class="form-group">
+                    <label asp-for="SubCategoryId" class="control-label">القسم الفرعي</label>
+                    <select id="MyCities" asp-for="SubCategoryId" asp-items="@ViewBag.SubCategories" class="form-control">
+                    </select>
+                    <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="RegionId" class="control-label">المنطقه</label>
+                    <select id="MyRegions" asp-for="RegionId" asp-items="@ViewBag.Regions" class="form-control">
+                    </select>
+                    <span asp-validation-for="RegionId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CityId" class="control-label">المدينه</label>
+                    <select id="MyCities" asp-for="CityId" asp-items="@ViewBag.Cities" class="form-control">
+                    </select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DistrictId" class="control-label">الحي</label>
+                    <select id="MyDistricts" asp-items="@ViewBag.Districts" asp-for="DistrictId" class="form-control">
+                    </select>
+                    <span asp-validation-for="DistrictId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">الصوره القديمه</label>
+                    <div class="row">
+                        @foreach (var item in Model.Images)
+                        {
+                            <div class="uploaded-image center-block" style="margin:20px"><span class="remove-oldImage" id="@oldIndexImage"><i class="fa fa-times"></i></span><img src="@item" alt="" class="oldImage" id="@oldIndexImage"><input type="hidden"></div>
+
+                            oldIndexImage -= 1;
+
+                        }
+                    </div>
+                </div>
+                <input hidden asp-for="oldImages" id="images" />
+
+                <div class="form-group">
+                    <label class="control-label">
+                        صور جديده
+                    </label>
+                    <div class="mult-img-result">
+                        <div class="btnAddImg_">
+                            <input type="file" accept="image/*" name="photos[]" multiple="">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <input asp-for="NewImages" id="newImages" hidden multiple />
+
+
+
+                <div class="form-group">
+                    <input type="button" value="تعديل" class="btn-new-style btn-rounded" onclick="Validation()" />
+                    <input type="submit" hidden value="تعديل" class="btn-new-style btn-rounded" id="btnSubmit" />
+                </div>
+                <div>
+                    <a asp-action="Index" class="btn-black">العودة الى الرئيسية</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script language="javascript">
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $('#date_picker').attr('min', today);
+    </script>
+
+    <script>
+        var images = [];
+        var oldImages = []
+
+        $(document).ready(function () {
+
+            let index = 1;
+            $(document).on('change', '.btnAddImg_ > input', function (event) {
+
+
+
+                for (var i = 0; i < event.target.files.length; i++) {
+                    $('.mult-img-result').append(
+                        '<div class="uploaded-image"><span class="remove-appendedd" id=' + index + '><i class="fa fa-times"></i></span><img src="' +
+                        URL.createObjectURL(event.target.files[i]) +
+                        '" alt=""><input type="hidden" value=' + URL.createObjectURL(event.target.files[i]) + '></div>'
+                    );
+
+                    images.push({ "id": index, "img": event.target.files[i] });
+
+                    index += 1;
+                }
+
+
+                console.log(images)
+            });
+
+            $(document).on('click', '.remove-appendedd', function () {
+                console.log(this.id)
+
+                for (let i = 0; i < images.length; i++) {
+                    if (images[i].id == this.id) {
+                        images.splice(i, 1);
+                    }
+                }
+                $(this).parent().remove();
+
+                console.log(images)
+
+            });
+
+            var oldImage = document.querySelectorAll(".oldImage");
+
+
+            for (let i = 0; i < oldImage.length; i++) {
+                console.log(oldImage[i].src);
+                console.log(oldImage[i].id);
+                var src = oldImage[i].src;
+                var id = oldImage[i].id;
+
+
+                oldImages.push({ "id": id, "img": src });
+
+
+            }
+
+            $(document).on('click', '.remove-oldImage', function (e) {
+                console.log(this.id)
+
+                for (let i = 0; i < oldImages.length; i++) {
+                    if (oldImages[i].id == this.id) {
+                        oldImages.splice(i, 1);
+                    }
+                }
+                $(this).parent().remove();
+
+                console.log(oldImages)
+
+            });
+
+        });
+
+
+
+        function Validation() {
+
+            if ($("#Title").val().trim() == "") {
+                toastr.error("فضلا قم بادخال عنوان الاعلان")
+                return;
+            }
+            if ($("#Price").val() == "") {
+                toastr.error("فضلا قم بادخال سعر الاعلان")
+                return;
+            }
+            if ($("#Price").val() <= 0) {
+                toastr.error("فضلا قم بادخال سعر الاعلان بشكل صحيح")
+                return;
+            }
+            if ($("#Description").val().trim() == "") {
+                toastr.error("فضلا قم بادخال وصف الاعلان")
+                return;
+            }
+            if ($("#Phone").val() == "") {
+                toastr.error("فضلا قم بادخال رقم جوال الاعلان")
+                return;
+            }
+
+
+            const arr = ['jpg', 'png', 'jpeg']
+            for (let i = 0; i < images.length; i++) {
+                debugger;
+                var extenstionImage = images[i].img.name;
+                var img = extenstionImage.split(".")[1];
+
+                if (!arr.includes(img)) {
+                    var str = " فضلا قم بتحميل التذاكر باحدي الصيغ " + "png" + " او " + "jpg" + " او " + "jpeg"
+                    toastr.error(str)
+                    return false;
+
+                }
+            }
+
+
+            // new images
+            const dataTransfer = new DataTransfer();
+
+            for (let i = 0; i < images.length; i++) {
+                dataTransfer.items.add(images[i].img);
+            }
+
+            var ele = document.getElementById("newImages");
+            ele.files = dataTransfer.files;
+
+
+            // old images
+            var allOldImages = document.getElementById("images")
+
+
+            var text = "";
+            for (let i = 0; i < oldImages.length; i++) {
+                text += oldImages[i].img + ","
+
+            }
+            allOldImages.value = text
+
+
+            // return
+
+            $("#btnSubmit").click();
+
+        }
+
+    </script>
+
+}

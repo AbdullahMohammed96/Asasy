@@ -1,0 +1,251 @@
+﻿@using Asasy.Domain.ViewModel.CategoryModel;
+@model IEnumerable<MainCategoryViewModel>
+@{
+    ViewData["Title"] = "AdvertisementDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<style>
+    .more {
+        border: none;
+        background: #fff;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+        color: #e10e0e;
+    }
+
+    .textBody {
+        font-size: 15px;
+        color: black
+    }
+
+    .textHeader {
+        font-size: 20px;
+        font-weight: bold;
+        color: black
+    }
+</style>
+
+
+
+
+<div class="card-box">
+
+    <h2 class="header-title m-t-0 m-b-30">الاقسام</h2>
+
+    <div>
+        <p>
+            <a asp-action="CreateMainCategory" asp-controller="Category" class="btn btn-primary btn-rounded w-md waves-effect waves-light m-b-5">اضافة قسم رئيسي جديد</a>
+        </p>
+
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th style="text-align:center">
+                        الرقم
+                    </th>
+                    <th style="text-align:center">
+                        الاسم بالعربية
+                    </th>
+                    <th style="text-align:center">
+                        الاسم بالانجليزية
+                    </th>
+
+                    <th style="text-align:center">
+                        الصورة
+                    </th>
+                    <th style="text-align:center">
+                        الاقسام الفرعية
+                    </th>
+                    <th style="text-align:center">
+                        الحالة
+                    </th>
+                    <th style="text-align:center">
+                        تغيير الحالة
+                    </th>
+                    <th style="text-align:center">
+                        تعديل
+                    </th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @if (item.NameAr != null)
+                            {
+                                @if (item.NameAr.Length < 18)
+                                {
+                                    @item.NameAr
+                                }
+                                else
+                                {
+                                    string txt = item.NameAr.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.NameAr' , 'الاسم بالعربيه')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (item.NameEn != null)
+                            {
+                                @if (item.NameEn.Length < 18)
+                                {
+                                    @item.NameEn
+                                }
+                                else
+                                {
+                                    string txt = item.NameEn.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.NameEn' , 'الاسم بالنجليزيه')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+
+                        <td>
+                            <img src="@item.Img" width="50" height="50" alt="@item.NameAr" />
+                        </td>
+                        <td>
+                            <a asp-action="SubCategory" asp-controller="Category" asp-route-id="@item.Id" asp-route-name="@item.NameAr" class="icon-font btn">
+                                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                        <td>
+                            @{
+                                if (item.IsActive == true)
+                                {
+                                        <label id="@item.Id" style="color:green;font-size: 17px;">مفعل</label>
+                                }
+                                else
+                                {
+                                        <label id="@item.Id" style="color:red;font-size: 17px;">غير مفعل</label>
+                                }
+                            }
+                        </td>
+
+                        <td>
+                            <input type="button" value="تغيير الحالة" onclick="ChangeStatus('@item.Id')" class="btn btn-ok btn-rounded" />
+                        </td>
+
+                        <td>
+                            <a asp-action="EditMainCategory" asp-controller="Category" asp-route-id="@item.Id" asp-route-type="Main" class="icon-font btn">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+    </div><!-- end row -->
+</div>
+
+
+
+
+
+<input type="hidden" id="msg" value="@ViewBag.Msg" />
+
+
+
+
+<button hidden type="button" class="btn btn-primary" data-toggle="modal" id="fireModal" data-target="#exampleModal">
+</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">
+                <p> </p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+
+
+ 
+
+    <script>
+
+
+
+        window.addEventListener("load", function () {
+            debugger
+            var mm = $("#msg").val();
+            if ($("#msg").val() != "") {
+                toastr.success($("#msg").val())
+                setTimeout(function () {
+                    window.location.href = "/Category/MainCategory"
+
+                }, 2000);
+
+
+            }
+        });
+
+        $(document).ready(function () {
+            datatableFun("#datatable-responsive", [0, 1, 4]);
+        });
+
+
+        function ChangeStatus(id) {
+            $.post('/Category/ChangeStatus', { id: id }, function (response) {
+                debugger;
+                if (response == true) {
+                    $('#' + id).css('color', 'green');
+                    $('#' + id).html('مفعل');
+                } else if (response == false) {
+                    $('#' + id).css('color', 'red');
+                    $('#' + id).html('غير مفعل');
+
+                }
+            });
+        }
+
+
+
+
+        function ReadMore(value, header) {
+            console.log("test")
+            //     debugger
+            $("#modalBody").empty();
+            $("#modalHeader").empty();
+
+            $("#modalHeader").append(`<p class="textHeader" >${header}</p>`)
+            $("#modalBody").append(`<p class="textBody" >${value}</p>`)
+
+            $("#fireModal").click();
+
+        }
+
+    </script>
+
+}
+

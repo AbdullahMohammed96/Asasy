@@ -1,0 +1,338 @@
+﻿@using Asasy.Domain.ViewModel.Complaints;
+@model IEnumerable<ComplaintsListViewModel>
+@{
+    ViewData["Title"] = "المدن";
+}
+
+
+
+
+<style>
+    .more {
+        border: none;
+        background: #fff;
+        font-weight: bold;
+        font-size: 11px;
+        cursor: pointer;
+        color: #e10e0e;
+    }
+
+    .textBody {
+        font-size: 15px;
+        color: black
+    }
+
+    .textHeader {
+        font-size: 20px;
+        font-weight: bold;
+        color: black
+    }
+</style>
+
+<div class="card-box">
+
+    <h2 class="header-title m-t-0 m-b-30">الشكاوي و الاقتراحات</h2>
+
+    <div>
+      
+        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>رقم الشكوي</th>
+                    <th>كود الشكوي</th>
+                    <th>الاسم</th>
+                    <th> رقم الجوال </th>
+                    <th>محتوي الرساله</th>
+                    <th>الرد </th>
+                    <th>تم الرد ؟ </th>
+                    <th>تاريخ الشكوي </th>
+                    <th>حذف</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CodeComplaint)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phone)
+                        </td>
+                        <td>
+                            @if (item.Message != null)
+                            {
+                                @if (item.Message.Length < 18)
+                                {
+                                    @item.Message
+                                }
+                                else
+                                {
+                                    string txt = item.Message.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.Message' , 'محتوي الرساله')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+
+                            @if (item.Replay != null)
+                            {
+                                @if (item.Replay.Length < 18)
+                                {
+                                    @item.Replay
+                                }
+                                else
+                                {
+                                    string txt = item.Replay.Substring(0, 17);
+
+                                    <span>@txt</span>
+                                    <button onclick="ReadMore('@item.Replay' , 'الرد')" class="more">المزيد</button>
+
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{
+                                if (item.IsReplay)
+                                {
+                                    <label>تم الرد</label>
+                                }
+                                else
+                                {
+                                    <button type="button" class=" btn btn-primary" onclick="ReplayToComplains(@item.Id)">
+                                        رد
+                                    </button>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+
+                        <td>
+                            <input type="button" value="حذف" onclick="Delete('@item.Id')" class="btn btn-danger btn-rounded" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+    </div><!-- end row -->
+</div>
+
+
+
+<!--Comman modal-->
+<!-- Button trigger modal -->
+<button hidden type="button" id="modalButton" class="btn btn-primary" data-toggle="modal" data-target="#mainModal"></button>
+
+<div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="padding:32px;">
+            <div class="modal-header">
+                <div>
+                    <p> </p>
+                </div>
+                <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div style=" display: flex;
+                         justify-content: center;
+                         align-items: center;
+                         gap:15px;"
+                 class="modal-body "
+                 id="reImg">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<button hidden type="button" class="btn btn-primary" data-toggle="modal" id="fireModal" data-target="#exampleModal">
+</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">
+                <p> </p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        function Delete(id) {
+            Swal.fire({
+                title: 'هل انت متاكد من حذف الشكوي ؟',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                cancelButtonText: 'اغلاق',
+                confirmButtonText: 'حذف',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/Complaints/Delete",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            id: id
+                        }, success: function (result) {
+                            debugger;
+                            if (result.data == true) {
+
+                                    toastr.success(result.msg);
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+
+                            }
+
+
+                            if (result.data == false) {
+                                    toastr.error(result.msg);
+                                setTimeout(function () {
+                                }, 3000);
+
+                            }
+                            setTimeout(function () {
+                                window.location.reload();
+
+                            }, 3000);
+                        },
+                        failure: function (info) {
+
+                        }
+                    })
+                }
+            })
+        }
+
+        function ReplayToComplains(id) {
+            //debugger;
+
+            var ele = ``;
+            ele += ` <textarea class="form-control" id="replay" style="padding:40px"></textarea>
+                                    <button type="button"  class=" btn btn-danger" onclick="acceptAnswerAction(${id})">
+                                       تاكيد الرد
+                                        </button>`;
+
+
+            document.getElementById("reImg").innerHTML = ele;
+            $("#modalButton").click();
+
+        }
+
+
+        function acceptAnswerAction(id) {
+            //debugger;
+
+            if ($("#replay").val().trim() == "") {
+                toastr.error("فضلا ادخل الرد")
+                return false;
+            }
+
+            $.ajax({
+                url: "/Complaints/ReplayToComplaints",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id,
+                    replay: $("#replay").val()
+                },
+                success: function (result) {
+                    console.log('hello')
+                    if (result.data == true) {
+                        toastr.success('تم الرد بنجاح', '');
+                        setTimeout(function () {
+                            window.location.reload()
+                        }, 3000);
+                    }
+                    else {
+                        toastr.error('عفوا حدث خطأ ما', '');
+                        // location.reload();
+                    }
+                },
+
+                failure: function (info) {
+                    toastr.error('حدث خطا حاول مره اخري', '');
+                    location.reload();
+
+                }
+            });
+            $("#close").click();
+        }
+
+
+    </script>
+
+    <script>
+
+        function Validation(id) {
+            $.ajax({
+                url: "/Cities/ChangeState",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    id: id
+                },
+                success: function (result) {
+
+                    if (result.data == true) {
+                        $('#' + id).css('color', 'green');
+                        $('#' + id).html('مفعل');
+                    } else if (result.data == false) {
+                        $('#' + id).css('color', 'red');
+                        $('#' + id).html('غير مفعل');
+                    }
+                },
+                failure: function (info) {
+
+                }
+            });
+        }
+
+
+        function ReadMore(value, header) {
+
+            $("#modalBody").empty();
+            $("#modalHeader").empty();
+
+            $("#modalHeader").append(`<p class="textHeader" >${header}</p>`)
+            $("#modalBody").append(`<p class="textBody" >${value}</p>`)
+
+            $("#fireModal").click();
+
+        }
+    </script>
+}
