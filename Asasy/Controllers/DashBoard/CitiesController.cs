@@ -1,12 +1,9 @@
-﻿using Asasy.Domain.Entities.Cities_Tables;
-using Asasy.Domain.Enums;
+﻿using Asasy.Domain.Enums;
 using Asasy.Domain.ViewModel.Cities;
 using Asasy.Infrastructure.Extension;
-using Asasy.Persistence;
 using Asasy.Service.DashBoard.Contract.CitiesInterfaces;
 using Asasy.Service.DashBoard.Contract.RegionsInterfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Asasy.Controllers.DashBoard
 {
@@ -22,6 +19,141 @@ namespace Asasy.Controllers.DashBoard
             _regionServices = regionServices;
         }
 
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
+        // GET: Cities
         // GET: Cities
         public async Task<IActionResult> Index()
         {
@@ -40,7 +172,7 @@ namespace Asasy.Controllers.DashBoard
         {
             if (ModelState.IsValid)
             {
-                if(await _cityServices.CreateCity(createCityViewModel))
+                if (await _cityServices.CreateCity(createCityViewModel))
                     return RedirectToAction(nameof(Index));
             }
             return View(createCityViewModel);
@@ -72,7 +204,7 @@ namespace Asasy.Controllers.DashBoard
         [HttpPost]
         public async Task<IActionResult> ChangeState(int? id)
         {
-            bool IsActive=await _cityServices.ChangeState(id);
+            bool IsActive = await _cityServices.ChangeState(id);
             return Json(new { data = IsActive });
         }
         [HttpPost]
