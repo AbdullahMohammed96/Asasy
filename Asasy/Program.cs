@@ -23,6 +23,7 @@ builder.Services.AddController();
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 builder.Services.AddDbContextServices(builder.Configuration);
+builder.Services.AddPerformanceServices();
 builder.Services.AddDefaultIdentityServices();
 
 
@@ -145,6 +146,10 @@ else
 
 app.ConfigureSwagger();
 
+// Add performance middleware
+app.UseResponseCompression();
+app.UseResponseCaching();
+
 var supportedCultures = new[] { new CultureInfo("ar"), new CultureInfo("en") };
 supportedCultures[0].DateTimeFormat = supportedCultures[1].DateTimeFormat;
 
@@ -165,9 +170,16 @@ app.UseRequestLocalization(localizationOptions);
 
 app.UseHttpsRedirection();
 
-
-
-app.UseStaticFiles();
+// Configure static files with caching
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        const int durationInSeconds = 60 * 60 * 24 * 365; // 1 year
+        ctx.Context.Response.Headers.Append("Cache-Control", $"public,max-age={durationInSeconds}");
+        ctx.Context.Response.Headers.Append("Expires", DateTime.UtcNow.AddYears(1).ToString("R"));
+    }
+});
 
 app.UseCors("AllowSpecificOrigin");
 
