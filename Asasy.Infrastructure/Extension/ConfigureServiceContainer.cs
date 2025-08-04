@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
+using System.IO.Compression;
 using AAITPayment.MyFatoorah;
+using Microsoft.AspNetCore.ResponseCompression;
 using Asasy.Domain.Common.Helpers;
 using Asasy.Domain.DTO.AppClientDTO.ContactUsClientDto;
 using Asasy.Domain.DTO.AuthApiDTO;
@@ -90,14 +92,51 @@ namespace Asasy.Infrastructure.Extension
         {
 
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(
-                   Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                
+                // Enable performance optimizations
+                options.EnableSensitiveDataLogging(false);
+                options.EnableServiceProviderCaching();
+                options.EnableDetailedErrors(false);
+                
+                // Configure query tracking behavior
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
 
+        }
 
+        public static void AddPerformanceServices(this IServiceCollection services)
+        {
+            // Add Response Compression
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
+            // Configure Compression Levels
+            services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
+
+            // Add Response Caching
+            services.AddResponseCaching();
+
+            // Add Memory Cache
+            services.AddMemoryCache();
         }
 
         public static void AddSingletonServices(this IServiceCollection services)
         {
+            services.AddSingleton<Asasy.Service.Common.ICacheService, Asasy.Service.Common.CacheService>();
 
 
         }

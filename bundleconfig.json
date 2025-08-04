@@ -1,0 +1,58 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/bootstrap.min.css",
+      "wwwroot/css/bootstrap-rtl.min.css",
+      "wwwroot/css/core.css",
+      "wwwroot/css/components.css",
+      "wwwroot/css/menu.css",
+      "wwwroot/css/pages.css",
+      "wwwroot/css/responsive.css",
+      "wwwroot/css/new-style.css",
+      "wwwroot/css/site.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/css/icons.min.css",
+    "inputFiles": [
+      "wwwroot/css/icons.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/jquery.min.js",
+      "wwwroot/js/jquery.app.js",
+      "wwwroot/js/jquery.core.js",
+      "wwwroot/js/modernizr.min.js",
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/js/plugins.min.js",
+    "inputFiles": [
+      "wwwroot/js/select-2.js",
+      "wwwroot/js/toastr.min.js",
+      "wwwroot/js/notify.js",
+      "wwwroot/js/pace.min.js",
+      "wwwroot/js/wow.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  }
+]

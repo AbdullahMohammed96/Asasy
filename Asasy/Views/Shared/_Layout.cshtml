@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+@using System.Security.Claims
 @using Asasy.Domain.Entities.UserTables
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
@@ -20,28 +20,40 @@
     <link rel="shortcut icon" href="~/images/LogoAthathy.png">
 
     <title>أثاثي</title>
-    <!-- DataTables -->
-    <link href="~/assets/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/plugins/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
-    <!-- Custom box css -->
-    <link href="~/assets/plugins/custombox/dist/custombox.min.css" rel="stylesheet">
-    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/css/select-2.css" rel="stylesheet" />
-    <link href="~/assets/plugins/nice-select/css/nice-select.css" rel="stylesheet" />
-    <link href="~/assets/css/tempusdominus-bootstrap-3.min.css" rel="stylesheet" />
-    <link href="~/assets/css/core.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/css/components.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/css/pages.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/css/menu.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/css/responsive.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/plugins/toastr/toastr.min.css" rel="stylesheet" />
-    <link href="~/assets/css/jquery.fancybox.min.css" rel="stylesheet" />
-    <link href="~/assets/css/new-style.css" rel="stylesheet" />
-    <script src="~/assets/js/modernizr.min.js"></script>
+    
+    <!-- Critical CSS (bundled and minified) -->
+    <link href="~/css/site.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="~/css/icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="~/js/site.min.js" as="script">
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <noscript><link href="~/css/icons.min.css" rel="stylesheet"></noscript>
+    <link href="~/assets/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/datatables/dataTables.bootstrap4.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/custombox/dist/custombox.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="~/assets/css/select-2.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/nice-select/css/nice-select.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="~/assets/css/tempusdominus-bootstrap-3.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="~/assets/plugins/toastr/toastr.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="~/assets/css/jquery.fancybox.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    
+    <!-- Critical inline script -->
+    <script>
+        // Load CSS asynchronously fallback
+        function loadCSS(href){var ss=window.document.createElement("link");var ref=window.document.getElementsByTagName("script")[0];ss.rel="stylesheet";ss.href=href;ref.parentNode.insertBefore(ss,ref);return ss;}
+    </script>
+    
+    <!-- Performance optimizations -->
+    <script src="~/js/performance.js" defer></script>
 
 
     <style>
