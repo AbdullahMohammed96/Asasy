@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using AAITPayment.MyFatoorah;
 using Asasy.Domain.Common.Helpers;
@@ -90,8 +90,16 @@ namespace Asasy.Infrastructure.Extension
         {
 
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(
-                   Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"));
+                
+                // FIXED: Add memory optimization settings
+                options.EnableServiceProviderCaching(false); // Disable service provider caching to reduce memory
+                options.EnableSensitiveDataLogging(false); // Disable sensitive data logging
+                options.ConfigureWarnings(warnings => 
+                    warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.CoreEventId.SensitiveDataLoggingEnabledWarning));
+            });
 
 
         }

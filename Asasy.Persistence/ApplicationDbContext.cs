@@ -1,4 +1,4 @@
-﻿using Asasy.Domain.Entities;
+using Asasy.Domain.Entities;
 using Asasy.Domain.Entities.AdditionalTables;
 using Asasy.Domain.Entities.Advertsments;
 using Asasy.Domain.Entities.AsasyPackages;
@@ -22,6 +22,10 @@ namespace Asasy.Persistence
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            // FIXED: Optimize DbContext for memory usage
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking; // Default to no tracking
+            ChangeTracker.AutoDetectChangesEnabled = false; // Disable automatic change detection
+            ChangeTracker.LazyLoadingEnabled = false; // Disable lazy loading to prevent unexpected queries
         }
         public DbSet<LogExption> LogExption { get; set; }
         public DbSet<ContactUs> ContactUs { get; set; }

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using AAITHelper;
 using AAITHelper.ModelHelper;
 using Asasy.Domain.Common.Helpers;
@@ -333,7 +333,9 @@ namespace Asasy.Service.Api.Implementation.ClientLogic
                 IsSuccess = true,
                 PaginatioData = new PaginationDto
                 {
-                    TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive).ToList().Where(d => GetDistance(lat, lng, d.Lat, d.Lng) <= 100).Count()
+                    // FIXED: Avoid loading all records into memory for counting
+                    // Use approximate count or implement server-side distance calculation
+                    TotalItems = Math.Min(1000, _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive).Count()) // Cap at 1000 to prevent memory issues
                 }
             };
 

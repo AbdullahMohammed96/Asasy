@@ -20,7 +20,8 @@ string path1 = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
 
 
 builder.Services.AddController();
-builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+// FIXED: Changed from singleton with pre-instantiated object to scoped service with factory
+builder.Services.AddScoped<IConverter>(provider => new SynchronizedConverter(new PdfTools()));
 
 builder.Services.AddDbContextServices(builder.Configuration);
 builder.Services.AddDefaultIdentityServices();
@@ -118,9 +119,9 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 
-// should be after build
-
-
+// FIXED: Move seeding to background service to prevent startup memory issues
+// Comment out synchronous seeding during startup
+/*
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -129,6 +130,27 @@ using (var scope = app.Services.CreateScope())
     var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
     await ContextSeed.Seed(userManager, roleManager, applicationDbContext);
 }
+*/
+
+// IMPROVEMENT: Run seeding in background after app starts
+_ = Task.Run(async () =>
+{
+    await Task.Delay(5000); // Wait 5 seconds for app to fully start
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationDbUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        await ContextSeed.Seed(userManager, roleManager, applicationDbContext);
+    }
+    catch (Exception ex)
+    {
+        // Log error but don't crash the app
+        Console.WriteLine($"Seeding error: {ex.Message}");
+    }
+});
 
 
 // Configure the HTTP request pipeline.
