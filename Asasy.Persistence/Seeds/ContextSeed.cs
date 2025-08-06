@@ -1,9 +1,10 @@
-﻿using AAITHelper.Enums;
+using AAITHelper.Enums;
 using Asasy.Domain.Entities.UserTables;
 using Asasy.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System;
 
 namespace Asasy.Persistence.Seeds
 {
@@ -52,15 +53,23 @@ namespace Asasy.Persistence.Seeds
             {
                 try
                 {
-                    applicationDbContext.Database.OpenConnection();
-                    await applicationDbContext.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Settings ON;");
+                    using var connection = applicationDbContext.Database.GetDbConnection();
+                    await connection.OpenAsync();
+                    
+                    using var command = connection.CreateCommand();
+                    command.CommandText = "SET IDENTITY_INSERT Settings ON;";
+                    await command.ExecuteNonQueryAsync();
+                    
                     await applicationDbContext.Settings.AddAsync(DefaultSettings.BasicSettingAsync());
-                    int dd = await applicationDbContext.SaveChangesAsync();
-                    await applicationDbContext.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Settings OFF;");
+                    await applicationDbContext.SaveChangesAsync();
+                    
+                    command.CommandText = "SET IDENTITY_INSERT Settings OFF;";
+                    await command.ExecuteNonQueryAsync();
                 }
-                finally
+                catch (Exception ex)
                 {
-                    applicationDbContext.Database.CloseConnection();
+                    // Log error but don't crash
+                    throw;
                 }
             }
         }
