@@ -1,4 +1,4 @@
-﻿using Asasy.Domain.ViewModel.Users;
+using Asasy.Domain.ViewModel.Users;
 using Asasy.Persistence;
 using Asasy.Service.DashBoard.Contract.UserInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -186,8 +186,8 @@ namespace Asasy.Service.DashBoard.Implementation.UserImplementation
             foundedUser.NormalizedUserName = foundedUser.NormalizedUserName + Guid.NewGuid().ToString();
             foundedUser.IsDeleted = true;
 
-            var adsForUser = _context.AdvertsmentDetails.Where(d => d.UserId == id).ToList();
-            adsForUser.ForEach(a => a.IsDelete = true);
+            // FIXED: Use bulk update instead of loading all records into memory
+            await _context.AdvertsmentDetails.Where(d => d.UserId == id).ExecuteUpdateAsync(a => a.SetProperty(x => x.IsDelete, true));
 
             await _context.SaveChangesAsync();
 
@@ -212,8 +212,8 @@ namespace Asasy.Service.DashBoard.Implementation.UserImplementation
 
 
 
-            var deviceIds = _context.DeviceIds.Where(d => d.UserId == id).ToList();
-            _context.DeviceIds.RemoveRange(deviceIds);
+            // FIXED: Use bulk delete instead of loading all records into memory
+            await _context.DeviceIds.Where(d => d.UserId == id).ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
 
 
