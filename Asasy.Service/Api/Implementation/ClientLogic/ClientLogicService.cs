@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using AAITHelper;
 using AAITHelper.ModelHelper;
 using Asasy.Domain.Common.Helpers;
@@ -296,74 +296,102 @@ namespace Asasy.Service.Api.Implementation.ClientLogic
         public async Task<BaseResponseDto<List<AdsListDto>>> AdsByLocation(string lat, string lng, int PageSize = 10, int PageNumber = 1)
         {
             var lang = _langService.Lang;
-
             int maxRows = PageSize;
-            //var ads = _context.AdvertsmentDetails.Where(d => d.IsActive && d.UserId != _currentUserService.UserId)
-            var ads = _context.AdvertsmentDetails.Where(d => d.IsActive)
+
+            // Convert lat/lng to double for database filtering
+            if (!double.TryParse(lat, out double latDouble) || !double.TryParse(lng, out double lngDouble))
+            {
+                return new BaseResponseDto<List<AdsListDto>>
+                {
+                    IsSuccess = false,
+                    Message = lang == "ar" ? "إحداثيات غير صحيحة" : "Invalid coordinates"
+                };
+            }
+
+            // Calculate bounding box for database filtering (rough approximation)
+            double radius = 100.0; // 100km radius
+            double latDelta = radius / 111.0; // roughly 111km per degree latitude
+            double lngDelta = radius / (111.0 * Math.Cos(latDouble * Math.PI / 180.0));
+
+            var ads = await _context.AdvertsmentDetails
+                .Where(d => d.IsActive)
+                .Where(d => d.Lat != null && d.Lng != null)
+                .Where(d => double.Parse(d.Lat) >= latDouble - latDelta && 
+                           double.Parse(d.Lat) <= latDouble + latDelta &&
+                           double.Parse(d.Lng) >= lngDouble - lngDelta && 
+                           double.Parse(d.Lng) <= lngDouble + lngDelta)
                 .Include(x => x.User)
                 .Include(x => x.AdvertsmentImages)
                 .Include(x => x.City)
                 .Include(x => x.District)
                 .Include(x => x.Favorites)
-                .ToList()
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Description,
+                    c.CreationDate,
+                    c.Lat,
+                    c.Lng,
+                    c.Location,
+                    c.Title,
+                    c.Price,
+                    c.IsSpecial,
+                    c.User.user_Name,
+                    c.City.NameAr,
+                    c.City.NameEn,
+                    c.District.NameAr,
+                    c.District.NameEn,
+                    c.AdvertsmentImages,
+                    c.Favorites
+                })
+                .OrderByDescending(a => a.Id)
+                .Skip((PageNumber - 1) * maxRows)
+                .Take(maxRows)
+                .ToListAsync();
+
+            // Apply precise distance filtering and mapping in memory (only for the small result set)
+            var result = ads
                 .Where(x => GetDistance(lat, lng, x.Lat, x.Lng) <= 100)
                 .Select(c => new AdsListDto
                 {
                     adsId = c.Id,
-                    cityName = lang == "ar" ? c.City.NameAr : c.City.NameEn,
+                    cityName = lang == "ar" ? c.NameAr : c.NameEn,
                     description = c.Description,
                     date = HelperDate.FormatDate(c.CreationDate, lang),
                     districtName = lang == "ar" ? c.District.NameAr : c.District.NameEn,
-                    image = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).FirstOrDefault() : null,
-                    images = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).ToList() : null,
-                    isFavorite = c.Favorites.Where(d => d.UserId == _currentUserService.UserId && d.AdsId == c.Id).Any(),
+                    image = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? 
+                           DashBordUrl.baseUrlHost + c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() : null,
+                    images = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? 
+                            c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).ToList() : null,
+                    isFavorite = c.Favorites.Any(d => d.UserId == _currentUserService.UserId && d.AdsId == c.Id),
                     isSpecial = c.IsSpecial,
                     lat = c.Lat,
                     lng = c.Lng,
                     location = c.Location,
                     title = c.Title,
                     price = c.Price,
-                    providerName = c.User.user_Name,
-                }).OrderByDescending(a => a.adsId).Skip((PageNumber - 1) * maxRows).Take(maxRows).ToList();
+                    providerName = c.user_Name,
+                }).ToList();
 
+            // Count total items with database-level filtering
+            var totalItems = await _context.AdvertsmentDetails
+                .Where(d => d.IsActive)
+                .Where(d => d.Lat != null && d.Lng != null)
+                .Where(d => double.Parse(d.Lat) >= latDouble - latDelta && 
+                           double.Parse(d.Lat) <= latDouble + latDelta &&
+                           double.Parse(d.Lng) >= lngDouble - lngDelta && 
+                           double.Parse(d.Lng) <= lngDouble + lngDelta)
+                .CountAsync();
 
             return new BaseResponseDto<List<AdsListDto>>
             {
-                Data = ads,
+                Data = result,
                 IsSuccess = true,
                 PaginatioData = new PaginationDto
                 {
-                    TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive).ToList().Where(d => GetDistance(lat, lng, d.Lat, d.Lng) <= 100).Count()
+                    TotalItems = totalItems
                 }
             };
-
-
-            //var ads = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive).Select(c => new AdsListDto
-            //{
-            //    adsId = c.Id,
-            //    cityName = lang == "ar" ? c.City.NameAr : c.City.NameEn,
-            //    description = c.Description,
-            //    date = HelperDate.FormatDate(c.CreationDate, lang),
-            //    districtName = lang == "ar" ? c.District.NameAr : c.District.NameEn,
-            //    image = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).FirstOrDefault() : null,
-            //    images = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).ToList() : null,
-            //    isFavorite = c.Favorites.Where(d => d.UserId == _currentUserService.UserId && d.AdsId == c.Id).Any(),
-            //    isSpecial = c.IsSpecial,
-            //    lat = c.Lat,
-            //    lng = c.Lng,
-            //    location = c.Location,
-            //    title = c.Title,
-            //    price = c.Price,
-            //    providerName = c.User.user_Name,
-
-            //}).OrderByDescending(a => a.adsId).ToList();
-
-            //return new BaseResponseDto<List<AdsListDto>>
-            //{
-            //    Data = ads,
-            //    IsSuccess = true,
-            //};
-
         }
 
         public static double GetDistance(string FromLat, string FromLng, string ToLat, string ToLng) //VM : ViewModel
@@ -1304,71 +1332,74 @@ namespace Asasy.Service.Api.Implementation.ClientLogic
         {
             var lang = _langService.Lang;
 
-            //var ads = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive && !d.User.IsDeleted);
-            var ads = _context.AdvertsmentDetails.Where(d => d.IsActive && !d.User.IsDeleted);
-            PaginationDto pagination = new PaginationDto();
+            // Build query with proper includes and filtering
+            var query = _context.AdvertsmentDetails
+                .Where(d => d.IsActive && !d.User.IsDeleted)
+                .Include(x => x.User)
+                .Include(x => x.AdvertsmentImages)
+                .Include(x => x.City)
+                .Include(x => x.District)
+                .Include(x => x.Favorites)
+                .AsQueryable();
+
+            // Apply filters
             if (model.regionId != 0)
             {
-                ads = ads.Where(d => d.RegionId == model.regionId);
-                //pagination.TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive && !d.User.IsDeleted && d.RegionId == model.regionId).Count();
+                query = query.Where(d => d.RegionId == model.regionId);
             }
 
             if (model.from != default && model.to != default)
             {
-                ads = ads.Where(d => d.CreationDate.Date >= model.from.Date && d.CreationDate.Date <= model.to.Date);
-                //pagination.TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive && !d.User.IsDeleted && d.CreationDate.Date >= model.from.Date && d.CreationDate.Date <= model.to.Date).Count();
-
+                query = query.Where(d => d.CreationDate.Date >= model.from.Date && d.CreationDate.Date <= model.to.Date);
             }
 
             if (model.isContainImages)
             {
-                ads = ads.Where(d => d.AdvertsmentImages.Any());
-                //pagination.TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive && !d.User.IsDeleted && d.AdvertsmentImages.Any()).Count();
-
+                query = query.Where(d => d.AdvertsmentImages.Any());
             }
 
             if (model.categoryId != 0)
             {
-                ads = ads.Where(d => d.CategoryId == model.categoryId);
-                //pagination.TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive && !d.User.IsDeleted && d.CategoryId == model.categoryId).Count();
-
-            }
-            if (model.subCategories != null)
-            {
-                ads = ads.Where(d => model.subCategories.Contains(d.SubCategoryId));
-                //pagination.TotalItems = _context.AdvertsmentDetails.Where(d => d.UserId != _currentUserService.UserId && d.IsActive && !d.User.IsDeleted && d.SubCategoryId == model.subCategoryId).Count();
-
+                query = query.Where(d => d.CategoryId == model.categoryId);
             }
 
-            pagination.TotalItems = ads.Count();
-
-            int maxRows = model.PageSize;
-            var allAds = ads.Select(c => new AdsListDto
+            if (model.subCategories != null && model.subCategories.Any())
             {
-                adsId = c.Id,
-                cityName = lang == "ar" ? c.City.NameAr : c.City.NameEn,
-                date = HelperDate.FormatDate(c.CreationDate, lang),
-                districtName = lang == "ar" ? c.District.NameAr : c.District.NameEn,
-                description = c.Description,
-                image = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).FirstOrDefault() : null,
-                images = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).ToList() : null,
-                isFavorite = c.Favorites.Where(d => d.UserId == _currentUserService.UserId && d.AdsId == c.Id).Any(),
-                isSpecial = c.IsSpecial,
-                lat = c.Lat,
-                lng = c.Lng,
-                location = c.Location,
-                title = c.Title,
-                price = c.Price,
-                providerName = c.User.user_Name,
-
-            }).Skip((model.PageNumber - 1) * maxRows).Take(maxRows).ToList();
-
-
-            if (model.isLatest)
-            {
-                allAds = allAds.OrderByDescending(o => o.adsId).Skip((model.PageNumber - 1) * maxRows).Take(maxRows).ToList();
-
+                query = query.Where(d => model.subCategories.Contains(d.SubCategoryId));
             }
+
+            // Get total count efficiently
+            var totalItems = await query.CountAsync();
+
+            // Apply ordering and pagination
+            var orderedQuery = model.isLatest 
+                ? query.OrderByDescending(o => o.Id)
+                : query.OrderByDescending(o => o.Id);
+
+            var allAds = await orderedQuery
+                .Skip((model.PageNumber - 1) * model.PageSize)
+                .Take(model.PageSize)
+                .Select(c => new AdsListDto
+                {
+                    adsId = c.Id,
+                    cityName = lang == "ar" ? c.City.NameAr : c.City.NameEn,
+                    date = HelperDate.FormatDate(c.CreationDate, lang),
+                    districtName = lang == "ar" ? c.District.NameAr : c.District.NameEn,
+                    description = c.Description,
+                    image = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? 
+                           DashBordUrl.baseUrlHost + c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() : null,
+                    images = c.AdvertsmentImages.Select(n => n.Image).FirstOrDefault() != null ? 
+                            c.AdvertsmentImages.Select(n => DashBordUrl.baseUrlHost + n.Image).ToList() : null,
+                    isFavorite = c.Favorites.Any(d => d.UserId == _currentUserService.UserId && d.AdsId == c.Id),
+                    isSpecial = c.IsSpecial,
+                    lat = c.Lat,
+                    lng = c.Lng,
+                    location = c.Location,
+                    title = c.Title,
+                    price = c.Price,
+                    providerName = c.User.user_Name,
+                })
+                .ToListAsync();
 
             return new BaseResponseDto<List<AdsListDto>>
             {
