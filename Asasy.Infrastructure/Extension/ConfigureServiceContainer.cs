@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using AAITPayment.MyFatoorah;
 using Asasy.Domain.Common.Helpers;
@@ -91,15 +91,24 @@ namespace Asasy.Infrastructure.Extension
 
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(
-                   Configuration.GetConnectionString("DefaultConnection")));
-
+                   Configuration.GetConnectionString("DefaultConnection"),
+                   sqlServerOptionsAction: sqlOptions =>
+                   {
+                       sqlOptions.EnableRetryOnFailure(
+                           maxRetryCount: 3,
+                           maxRetryDelay: TimeSpan.FromSeconds(30),
+                           errorNumbersToAdd: null);
+                   })
+               .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking) // Prevent memory leaks from change tracking
+               .EnableSensitiveDataLogging(false) // Disable in production
+               .EnableDetailedErrors(false)); // Disable in production
 
         }
 
         public static void AddSingletonServices(this IServiceCollection services)
         {
-
-
+            // Add memory monitoring service
+            services.AddSingleton<IMemoryMonitor, MemoryMonitor>();
         }
 
         public static void AddLocalizationServices(this IServiceCollection services)
@@ -124,14 +133,40 @@ namespace Asasy.Infrastructure.Extension
 
         public static void AddFireBase(this IServiceCollection services)
         {
-            // Initialize Firebase
-            FirebaseApp.Create(new AppOptions()
+            // Initialize Firebase with error handling and async approach
+            try
             {
-                Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "athathy-db751-firebase-adminsdk-f0tz5-7a5df9cfdd.json")),
-
-            });
-
-
+                var firebaseConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "athathy-db751-firebase-adminsdk-f0tz5-7a5df9cfdd.json");
+                
+                if (File.Exists(firebaseConfigPath))
+                {
+                    // Use lazy initialization to prevent blocking startup
+                    services.AddSingleton<FirebaseApp>(provider =>
+                    {
+                        try
+                        {
+                            return FirebaseApp.Create(new AppOptions()
+                            {
+                                Credential = GoogleCredential.FromFile(firebaseConfigPath),
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log error but don't fail startup
+                            Console.WriteLine($"Firebase initialization failed: {ex.Message}");
+                            return null;
+                        }
+                    });
+                }
+                else
+                {
+                    Console.WriteLine("Firebase configuration file not found. Firebase services will be disabled.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Firebase configuration error: {ex.Message}");
+            }
         }
 
         public static void TimeOutServices(this IServiceCollection services, IWebHostEnvironment Environment)

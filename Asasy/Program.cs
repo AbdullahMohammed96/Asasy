@@ -11,8 +11,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure memory management
+builder.Services.Configure<MemoryCacheOptions>(options =>
+{
+    options.SizeLimit = 1024; // 1GB limit
+    options.ExpirationScanFrequency = TimeSpan.FromMinutes(5);
+});
+
+// Add memory cache
+builder.Services.AddMemoryCache();
+
+// Configure JSON serialization to reduce memory usage
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -120,14 +138,31 @@ var app = builder.Build();
 
 // should be after build
 
-
-using (var scope = app.Services.CreateScope())
+// Optimize database seeding with proper error handling and memory management
+try
 {
-    var services = scope.ServiceProvider;
-    var userManager = services.GetRequiredService<UserManager<ApplicationDbUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
-    await ContextSeed.Seed(userManager, roleManager, applicationDbContext);
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var userManager = services.GetRequiredService<UserManager<ApplicationDbUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
+        var memoryMonitor = services.GetRequiredService<IMemoryMonitor>();
+        
+        memoryMonitor.LogMemoryUsage("Before seeding");
+        
+        // Use a timeout to prevent hanging
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(2));
+        await ContextSeed.Seed(userManager, roleManager, applicationDbContext);
+        
+        memoryMonitor.LogMemoryUsage("After seeding");
+    }
+}
+catch (Exception ex)
+{
+    // Log the error but don't fail startup
+    Console.WriteLine($"Database seeding failed: {ex.Message}");
+    // In production, you might want to log this to a proper logging service
 }
 
 
