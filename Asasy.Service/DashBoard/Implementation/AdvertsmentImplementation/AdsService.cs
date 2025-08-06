@@ -1,4 +1,4 @@
-﻿using AAITHelper;
+using AAITHelper;
 using AAITHelper.ModelHelper;
 using Asasy.Domain.Common.Helpers;
 using Asasy.Domain.Common.PathUrl;
@@ -180,26 +180,33 @@ namespace Asasy.Service.DashBoard.Implementation.AdvertsmentImplementation
             return images;
         }
 
-        public async Task<List<AdsListViewModel>> AllAds()
+        public async Task<List<AdsListViewModel>> AllAds(int pageNumber = 1, int pageSize = 50)
         {
-            var ads = _context.AdvertsmentDetails.Where(d => !d.User.IsDeleted).Select(c => new AdsListViewModel
-            {
-                AdsId = c.Id,
-                Category = c.Category.NameAr,
-                City = c.City.NameAr,
-                CreationDate = HelperDate.FormatDate(c.CreationDate, "ar"),
-                Description = c.Description,
-                District = c.District.NameAr,
-                IsActive = c.IsActive,
-                IsSpecial = c.IsSpecial,
-                Phone = c.Phone + " " + c.PhoneCode,
-                PhoneCode = c.PhoneCode,
-                Price = c.Price,
-                Region = c.Region.NameAr,
-                StatusProduct = c.StatusProduct == (int)StatusProduct.New ? "جديد" : "مستعمل",
-                SubCategory = c.SubCategory.NameAr,
-                Title = c.Title
-            }).OrderByDescending(a => a.AdsId).ToList();
+            var ads = await _context.AdvertsmentDetails
+                .Where(d => !d.User.IsDeleted)
+                .AsNoTracking()
+                .Select(c => new AdsListViewModel
+                {
+                    AdsId = c.Id,
+                    Category = c.Category.NameAr,
+                    City = c.City.NameAr,
+                    CreationDate = HelperDate.FormatDate(c.CreationDate, "ar"),
+                    Description = c.Description,
+                    District = c.District.NameAr,
+                    IsActive = c.IsActive,
+                    IsSpecial = c.IsSpecial,
+                    Phone = c.Phone + " " + c.PhoneCode,
+                    PhoneCode = c.PhoneCode,
+                    Price = c.Price,
+                    Region = c.Region.NameAr,
+                    StatusProduct = c.StatusProduct == (int)StatusProduct.New ? "جديد" : "مستعمل",
+                    SubCategory = c.SubCategory.NameAr,
+                    Title = c.Title
+                })
+                .OrderByDescending(a => a.AdsId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             return ads;
         }

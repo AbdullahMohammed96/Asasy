@@ -14,6 +14,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure memory management
+builder.Services.Configure<MemoryCacheOptions>(options =>
+{
+    options.SizeLimit = 1024; // 1GB limit
+    options.ExpirationScanFrequency = TimeSpan.FromMinutes(5);
+});
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 string path1 = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
@@ -120,14 +127,29 @@ var app = builder.Build();
 
 // should be after build
 
-
-using (var scope = app.Services.CreateScope())
+try
 {
-    var services = scope.ServiceProvider;
-    var userManager = services.GetRequiredService<UserManager<ApplicationDbUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
-    await ContextSeed.Seed(userManager, roleManager, applicationDbContext);
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var userManager = services.GetRequiredService<UserManager<ApplicationDbUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var applicationDbContext = services.GetRequiredService<ApplicationDbContext>();
+        var memoryMonitor = services.GetRequiredService<IMemoryMonitor>();
+        
+        // Set timeout for seeding operations
+        applicationDbContext.Database.SetCommandTimeout(TimeSpan.FromMinutes(5));
+        
+        memoryMonitor.LogMemoryUsage("Before seeding");
+        await ContextSeed.Seed(userManager, roleManager, applicationDbContext);
+        memoryMonitor.LogMemoryUsage("After seeding");
+    }
+}
+catch (Exception ex)
+{
+    // Log the error but don't crash the application
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "Error during database seeding");
 }
 
 

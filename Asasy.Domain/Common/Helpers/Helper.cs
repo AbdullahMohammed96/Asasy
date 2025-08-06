@@ -1,4 +1,4 @@
-﻿using Asasy.Domain.Enums;
+using Asasy.Domain.Enums;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +15,6 @@ namespace Asasy.Domain.Common.Helpers
     {
         private readonly IWebHostEnvironment HostingEnvironment;
         private IConverter _converter;
-        public static string translateFolderPath { get; set; } = null;
 
         public Helper(IConverter converter, IWebHostEnvironment hostingEnvironment)
         {
@@ -179,32 +178,38 @@ namespace Asasy.Domain.Common.Helpers
             //var folderDetails = Path.Combine(Directory.GetCurrentDirectory(), $"Common/Translate.json");
             //var folderDetails = Path.Combine(Directory.GetCurrentDirectory(), $"..\\Asasy.Domain\\Common\\Translate.json");
 
-
-            if (translateFolderPath == null)
+            string translateFolderPath = null;
+            try
             {
-                try
-                {
-                    translateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), $"Common\\Translate.json");
-                    File.ReadAllText(translateFolderPath);
-                }
-                catch (Exception ex)
+                translateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), $"Common\\Translate.json");
+                if (!File.Exists(translateFolderPath))
                 {
                     translateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), $"..\\Asasy.Domain\\Common\\Translate.json");
-                    File.ReadAllText(translateFolderPath);
                 }
             }
+            catch (Exception ex)
+            {
+                translateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), $"..\\Asasy.Domain\\Common\\Translate.json");
+            }
 
-            var JSON = File.ReadAllText(translateFolderPath);
-            dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(JSON);
+            if (string.IsNullOrEmpty(translateFolderPath) || !File.Exists(translateFolderPath))
+            {
+                return key; // Return key if file not found
+            }
 
-            dynamic mainRoot = jsonObj[key];
-            string text = mainRoot[lang.ToString()].ToString();
-            return text;
+            try
+            {
+                var JSON = File.ReadAllText(translateFolderPath);
+                dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(JSON);
 
-
-
-
-
+                dynamic mainRoot = jsonObj[key];
+                string text = mainRoot[lang.ToString()].ToString();
+                return text;
+            }
+            catch (Exception ex)
+            {
+                return key; // Return key if translation fails
+            }
         }
 
         //public static async Task<bool> SendNotifyAsync(ApplicationDbContext db, string textAr, string textEn, string fkProvider, int stutes)
